@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "AHGCollection.h"
 
 @interface AHGCollectionTests : XCTestCase
 
@@ -26,9 +27,38 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testMap
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    NSArray *strings = @[@"hello", @"world", @"too"];
+    NSArray *result = [[AHGNewColl(strings) map:^id(NSString *str) {
+        return [str uppercaseString];
+    }] map:^id(NSString *str) {
+        return [str stringByAppendingString:@"!"];
+    }].collection;
+    
+    NSArray *test = @[@"HELLO!", @"WORLD!", @"TOO!"];
+    XCTAssertEqualObjects(result, test, @"Map function didn't work");
+    
+    // And test that [map:] works with Sets
+    
+    NSSet *stringSet = [NSSet setWithArray:strings];
+    
+    NSSet *result2 = [[AHGNewColl(stringSet) map:^id(NSString *str) {
+        return [str uppercaseString];
+    }] map:^id(NSString *str) {
+        return [str stringByAppendingString:@"!"];
+    }].collection;
+    
+    NSSet *test2 = [NSSet setWithArray:test];
+    XCTAssertEqualObjects(result2, test2, @"Map function didn't work");
+    
+    // And test that [map:] works with Dictionaries
+    
+}
+
+- (void)testFlatMap
+{
+    
 }
 
 @end
