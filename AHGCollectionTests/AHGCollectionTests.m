@@ -14,6 +14,8 @@
 @property (nonatomic, copy) NSArray *strings;
 @property (nonatomic, copy) NSSet   *stringSet;
 
+@property (nonatomic, copy) NSArray *dictValues;
+
 @end
 
 @implementation AHGCollectionTests
@@ -24,6 +26,15 @@
    
     self.strings = @[@"hello", @"world", @"too"];
     self.stringSet = [NSSet setWithObjects:@"hello", @"to", @"you", @"again", nil];
+    
+    self.dictValues = @[@{@"a": @1, @"name": @"Andrew1"},
+                        @{@"b": @2, @"name": @"Andrew1"},
+                        @{@"c": @3, @"name": @"Andrew2"},
+                        @{@"d": @4, @"name": @"Andrew2"},
+                        @{@"a": @5, @"name": @"Andrew3"},
+                        @{@"b": @6, @"name": @"Andrew3"},
+                        @{@"c": @7, @"name": @"Andrew4"},
+                        @{@"d": @8, @"name": @"Andrew4"}];
 }
 
 - (void)tearDown
@@ -117,6 +128,22 @@
     XCTAssertEqualObjects(resultNot, testNot, @"FilterNot function didn't work");
 }
 
+- (void)testFolding
+{
+    AHGCollection *strings = AHGNewColl(self.stringSet);
+    
+    NSString *result = [strings foldLeft:@"" operator:^id(NSString *resultObject, NSString *anObject) {
+        return [resultObject stringByAppendingString:anObject];
+    }];
+    XCTAssertEqualObjects(@"hellotoyouagain", result, @"Fold produced the wrong result");
+    
+    strings = AHGNewColl(@[]);
+    result = [strings foldLeft:@"empty" operator:^id(id resultObject, id anObject) {
+        return [resultObject stringByAppendingString:anObject];
+    }];
+    XCTAssertEqualObjects(@"empty", result, @"Fold with empty array failed");
+}
+
 - (void)testGroupBy
 {
     AHGCollection *strings = AHGNewColl(self.stringSet);
@@ -157,6 +184,32 @@
     XCTAssertTrue(noneEmpty, @"Every didn't work");
 }
 
+- (void)testMapWithKey
+{
+    NSArray *result = [AHGNewColl(self.dictValues) mapWithKey:@"name"].collection;
+    
+    XCTAssertEqual(self.dictValues.count, result.count, @"Count is wrong");
+    XCTAssertEqualObjects(@"Andrew1", result.firstObject, @"First value is wrong");
+    XCTAssertEqualObjects(@"Andrew4", result.lastObject, @"Last value is wrong");
+}
 
+- (void)testFilterWithKey
+{
+    NSArray *result = [AHGNewColl(self.dictValues) filterWithKey:@"a"].collection;
+    XCTAssertEqual(2U, result.count, @"Count is wrong");
+    XCTAssertEqualObjects(@"Andrew1", result.firstObject[@"name"], @"First value is wrong");
+    XCTAssertEqualObjects(@"Andrew3", result.lastObject[@"name"], @"Last value is wrong");
+}
+
+- (void)testGroupByKey
+{
+    NSDictionary *result = [AHGNewColl(self.dictValues) groupByKey:@"name"];
+    XCTAssertEqual(4U, result.count, @"Count is wrong");
+    
+    for (id key in result) {
+        NSArray *group = result[key];
+        XCTAssertEqual(2U, group.count, @"Group count is wrong");
+    }
+}
 
 @end

@@ -97,6 +97,17 @@
     }];
 }
 
+- (id)foldLeft:(id)startValue operator:(AHGFoldBlock)folder
+{
+    id result = startValue;
+    
+    for (id obj in m_coll) {
+        result = folder(result, obj);
+    }
+    
+    return result;
+}
+
 - (NSDictionary *)groupBy:(AHGTransformBlock)transform
 {
     NSMutableDictionary *newDict = [NSMutableDictionary dictionary];
