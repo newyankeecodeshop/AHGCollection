@@ -2,7 +2,7 @@
 //  AHGCollection.h
 //  AHGCollection
 //
-//  Created by Andrew (Wingspan) on 12/30/2013.
+//  Created by Andrew on 12/30/2013.
 //  Copyright (c) 2013 Andrew Goodale. All rights reserved.
 //
 
@@ -21,9 +21,6 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  * A class which provides functional programming operations on various Foundation collection classes.
  */
 @interface AHGCollection : NSObject <NSCopying, NSFastEnumeration>
-
-/* Return the underlying Foundation collection */
-@property (readonly, nonatomic) id  collection;
 
 /* Test if the underlying collection has at least one element */
 @property (readonly, nonatomic, getter = isEmpty) BOOL empty;
@@ -56,6 +53,9 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
 
 /* Tests whether predicate is true for all values in the collection */
 - (BOOL)every:(AHGPredicateBlock)predicate;
+
+/* Returns an array containing the members of this collection */
+- (NSArray *)allObjects;
 
 @end
 

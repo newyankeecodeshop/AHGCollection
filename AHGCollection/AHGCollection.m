@@ -2,12 +2,20 @@
 //  AHGCollection.m
 //  AHGCollection
 //
-//  Created by Andrew (Wingspan) on 12/30/2013.
+//  Created by Andrew on 12/30/2013.
 //  Copyright (c) 2013 Andrew Goodale. All rights reserved.
 //
 
 #import "AHGCollection.h"
 #import "AHGBuilder.h"
+
+AHGCollection *AHGNewColl(AHGEnumerable *coll)
+{
+    return [[AHGCollection alloc] initWithCollection:coll
+                                             builder:[AHGBuilder builderFor:[coll class]]];
+}
+
+#pragma mark
 
 @implementation AHGCollection
 {
@@ -35,11 +43,6 @@
                                     count:(NSUInteger)len
 {
     return [m_coll countByEnumeratingWithState:state objects:buffer count:len];
-}
-
-- (id)collection
-{
-    return m_coll;
 }
 
 - (BOOL)isEmpty
@@ -160,15 +163,18 @@
     return YES;
 }
 
-@end
-
-#pragma mark
-
-AHGCollection *AHGNewColl(AHGEnumerable *coll)
+- (NSArray *)allObjects
 {
-    return [[AHGCollection alloc] initWithCollection:coll
-                                             builder:[AHGBuilder builderFor:[coll class]]];
+	NSMutableArray *array = [NSMutableArray array];
+	
+	for (id obj in m_coll) {
+		[array addObject:obj];
+	}
+	
+	return [array copy];
 }
+
+@end
 
 #pragma mark
 

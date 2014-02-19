@@ -2,7 +2,7 @@
 //  AHGBuilder.m
 //  AHGCollection
 //
-//  Created by Andrew (Wingspan) on 1/2/2014.
+//  Created by Andrew on 1/2/2014.
 //  Copyright (c) 2014 Andrew Goodale. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  AHGCollectionTests.m
 //  AHGCollectionTests
 //
-//  Created by Andrew (Wingspan) on 12/30/2013.
+//  Created by Andrew on 12/30/2013.
 //  Copyright (c) 2013 Andrew Goodale. All rights reserved.
 //
 
@@ -56,11 +56,11 @@
 
 - (void)testMap
 {
-    NSArray *result = [[AHGNewColl(self.strings) map:^id(NSString *str) {
+    NSArray *result = [[[AHGNewColl(self.strings) map:^id(NSString *str) {
         return [str uppercaseString];
     }] map:^id(NSString *str) {
         return [str stringByAppendingString:@"!"];
-    }].collection;
+    }] allObjects];
     
     NSArray *test = @[@"HELLO!", @"WORLD!", @"TOO!"];
     XCTAssertEqualObjects(result, test, @"Map function didn't work");
@@ -69,15 +69,18 @@
     
     NSSet *stringSet = [NSSet setWithArray:self.strings];
     
-    NSSet *result2 = [[AHGNewColl(stringSet) map:^id(NSString *str) {
+    NSArray *result2 = [[[AHGNewColl(stringSet) map:^id(NSString *str) {
         return [str uppercaseString];
     }] map:^id(NSString *str) {
         return [str stringByAppendingString:@"!"];
-    }].collection;
+    }] allObjects];
     
-    NSSet *test2 = [NSSet setWithArray:test];
-    XCTAssertEqualObjects(result2, test2, @"Map function didn't work");
-    
+	XCTAssertEqual(3UL, [result2 count], @"Wrong length for set mapping");
+	
+	for (id testObj in test) {
+		XCTAssertTrue([result2 containsObject:testObj], @"Map function didn't work");
+    }
+	
     // And test that [map:] works with Dictionaries
     
 }
@@ -88,11 +91,11 @@
     NSError *__block myErr = nil;
     
     NSArray *paths = @[@"/Library"];
-    NSArray *files = [AHGNewColl(paths) flatMap:^NSObject<NSCopying,NSFastEnumeration> *(id obj) {
+    AHGCollection *files = [AHGNewColl(paths) flatMap:^NSObject<NSCopying,NSFastEnumeration> *(id obj) {
         return [fileMgr contentsOfDirectoryAtPath:obj error:&myErr];
-    }].collection;
+    }];
     
-    XCTAssertTrue(files.count > 0, @"Should have found some files");
+    XCTAssertFalse(files.isEmpty, @"Should have found some files");
     
     for (NSString *file in files) {
         NSString *path = [@"/Library" stringByAppendingPathComponent:file];
@@ -105,9 +108,9 @@
     }] flatMap:^NSObject<NSCopying,NSFastEnumeration> *(NSString *path) {
 //        NSLog(@"\t%@", path);
         return [fileMgr contentsOfDirectoryAtPath:[@"/Library" stringByAppendingPathComponent:path] error:&myErr];
-    }].collection;
+    }];
     
-    XCTAssertTrue(files.count > 0, @"Should have found some files");
+    XCTAssertFalse(files.isEmpty, @"Should have found some files");
 }
 
 - (void)testFilter
@@ -117,12 +120,12 @@
     };
     
     AHGCollection *strings = AHGNewColl(@[@"hello", @"to", @"you", @"again"]);
-    NSArray *result = [strings filter:myFilter].collection;
+    NSArray *result = [[strings filter:myFilter] allObjects];
     
     NSArray *test = @[@"hello", @"again"];
     XCTAssertEqualObjects(result, test, @"Filter function didn't work");
     
-    NSArray *resultNot = [strings filterNot:myFilter].collection;
+    NSArray *resultNot = [[strings filterNot:myFilter] allObjects];
     
     NSArray *testNot = @[@"to", @"you"];
     XCTAssertEqualObjects(resultNot, testNot, @"FilterNot function didn't work");
@@ -130,12 +133,12 @@
 
 - (void)testFolding
 {
-    AHGCollection *strings = AHGNewColl(self.stringSet);
+    AHGCollection *strings = AHGNewColl(self.strings);
     
     NSString *result = [strings foldLeft:@"" operator:^id(NSString *resultObject, NSString *anObject) {
         return [resultObject stringByAppendingString:anObject];
     }];
-    XCTAssertEqualObjects(@"hellotoyouagain", result, @"Fold produced the wrong result");
+    XCTAssertEqualObjects(@"helloworldtoo", result, @"Fold produced the wrong result");
     
     strings = AHGNewColl(@[]);
     result = [strings foldLeft:@"empty" operator:^id(id resultObject, id anObject) {
@@ -186,7 +189,7 @@
 
 - (void)testMapWithKey
 {
-    NSArray *result = [AHGNewColl(self.dictValues) mapWithKey:@"name"].collection;
+    NSArray *result = [[AHGNewColl(self.dictValues) mapWithKey:@"name"] allObjects];
     
     XCTAssertEqual(self.dictValues.count, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject, @"First value is wrong");
@@ -195,8 +198,8 @@
 
 - (void)testFilterWithKey
 {
-    NSArray *result = [AHGNewColl(self.dictValues) filterWithKey:@"a"].collection;
-    XCTAssertEqual(2U, result.count, @"Count is wrong");
+    NSArray *result = [[AHGNewColl(self.dictValues) filterWithKey:@"a"] allObjects];
+    XCTAssertEqual(2UL, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject[@"name"], @"First value is wrong");
     XCTAssertEqualObjects(@"Andrew3", result.lastObject[@"name"], @"Last value is wrong");
 }
@@ -204,11 +207,11 @@
 - (void)testGroupByKey
 {
     NSDictionary *result = [AHGNewColl(self.dictValues) groupByKey:@"name"];
-    XCTAssertEqual(4U, result.count, @"Count is wrong");
+    XCTAssertEqual(4UL, result.count, @"Count is wrong");
     
     for (id key in result) {
         NSArray *group = result[key];
-        XCTAssertEqual(2U, group.count, @"Group count is wrong");
+        XCTAssertEqual(2UL, group.count, @"Group count is wrong");
     }
 }
 
