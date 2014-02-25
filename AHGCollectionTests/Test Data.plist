@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>testFlatMapper</key>
+	<array>
+		<dict>
+			<key>value</key>
+			<string>Seven</string>
+			<key>count</key>
+			<integer>7</integer>
+		</dict>
+		<dict>
+			<key>count</key>
+			<integer>99</integer>
+			<key>value</key>
+			<string>Ninety-Nine</string>
+		</dict>
+		<dict>
+			<key>value</key>
+			<string>Nine</string>
+			<key>count</key>
+			<integer>9</integer>
+		</dict>
+		<dict>
+			<key>count</key>
+			<integer>200</integer>
+			<key>value</key>
+			<string>Two Hundred</string>
+		</dict>
+	</array>
+	<key>testTransformer</key>
+	<array>
+		<string>a</string>
+		<string>b</string>
+		<string>c</string>
+		<string>dab</string>
+		<string>each</string>
+		<string>FAA</string>
+		<string>gab</string>
+		<string>ha</string>
+		<string>IAA</string>
+		<string>jab</string>
+		<string>kA</string>
+		<string>la</string>
+		<string>Mac</string>
+		<string>NAACO</string>
+		<string>oaf</string>
+		<string>pa</string>
+		<string>Qatar</string>
+		<string>Rabat</string>
+		<string>SA</string>
+		<string>tab</string>
+		<string>UAW</string>
+		<string>vacancies</string>
+		<string>Wabash</string>
+		<string>xebec</string>
+		<string>yacht</string>
+		<string>zabaglione</string>
+		<string>123</string>
+		<string>123</string>
+		<string>123</string>
+		<string>123</string>
+		<string>123</string>
+		<string>123</string>
+		<string>123</string>
+	</array>
+</dict>
+</plist>

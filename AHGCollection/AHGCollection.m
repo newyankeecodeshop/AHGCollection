@@ -7,12 +7,11 @@
 //
 
 #import "AHGCollection.h"
-#import "AHGBuilder.h"
+#import "AHGEnumeration.h"
 
 AHGCollection *AHGNewColl(AHGEnumerable *coll)
 {
-    return [[AHGCollection alloc] initWithCollection:coll
-                                             builder:[AHGBuilder builderFor:[coll class]]];
+    return [[AHGCollection alloc] initWithCollection:coll];
 }
 
 #pragma mark
@@ -20,14 +19,12 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
 @implementation AHGCollection
 {
     AHGEnumerable *m_coll;
-    AHGBuilder    *m_builder;
 }
 
-- (id)initWithCollection:(AHGEnumerable *)collection builder:(AHGBuilder *)builder
+- (id)initWithCollection:(AHGEnumerable *)collection
 {
     if ((self = [super init])) {
         m_coll = [collection copy];
-        m_builder = builder;
     }
     
     return self;
@@ -39,7 +36,7 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(__unsafe_unretained id [])buffer
+                                  objects:(id __unsafe_unretained [])buffer
                                     count:(NSUInteger)len
 {
     return [m_coll countByEnumeratingWithState:state objects:buffer count:len];
@@ -58,39 +55,24 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
 
 - (AHGCollection *)map:(AHGTransformBlock)transform
 {
-    AHGEnumerable *newColl = [m_builder newMutableColl:m_coll];
-    
-    for (id obj in m_coll) {
-        [m_builder addObject:transform(obj) toMutableColl:newColl];
-    };
-    
-    return [[AHGCollection alloc] initWithCollection:newColl builder:m_builder];
+	// This enumerator object wraps the source collection with a transform function
+	AHGTransformEnumerator *transformer = [[AHGTransformEnumerator alloc] initWithSource:m_coll
+																			   transform:transform];
+	return [[AHGCollection alloc] initWithCollection:transformer];
 }
 
-- (AHGCollection *)flatMap:(AHGEnumerateBlock)transform
+- (AHGCollection *)flatMap:(AHGFlatMapBlock)transform
 {
-    AHGEnumerable *newColl = [m_builder newMutableColl:m_coll];
-    
-    for (id obj in m_coll) {
-        for (id value in transform(obj)) {
-            [m_builder addObject:value toMutableColl:newColl];
-        }
-    }
-    
-    return [[AHGCollection alloc] initWithCollection:newColl builder:m_builder];
+	AHGFlatMapEnumerator *flatMapper = [[AHGFlatMapEnumerator alloc] initWithSource:m_coll
+																		  transform:transform];
+	return [[AHGCollection alloc] initWithCollection:flatMapper];
 }
 
 - (AHGCollection *)filter:(AHGPredicateBlock)predicate
 {
-    AHGEnumerable *newColl = [m_builder newMutableColl:m_coll];
-    
-    for (id obj in m_coll) {
-        if (predicate(obj)) {
-            [m_builder addObject:obj toMutableColl:newColl];
-        }
-    };
-    
-    return [[AHGCollection alloc] initWithCollection:newColl builder:m_builder];
+	AHGFilterEnumerator *filter = [[AHGFilterEnumerator alloc] initWithSource:m_coll
+																	   filter:predicate];
+	return [[AHGCollection alloc] initWithCollection:filter];
 }
 
 - (AHGCollection *)filterNot:(AHGPredicateBlock)predicate
@@ -117,14 +99,14 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
     
     for (id obj in m_coll) {
         id key = transform(obj);
-        AHGEnumerable *group = [newDict objectForKey:key];
+        NSMutableArray *group = [newDict objectForKey:key];
         
         if (group == nil) {
-            group = [m_builder newMutableColl:m_coll];
+            group = [NSMutableArray array];
             [newDict setObject:group forKey:key];
         }
         
-        [m_builder addObject:obj toMutableColl:group];
+        [group addObject:obj];
     }
     
     return [newDict copy];
@@ -186,7 +168,7 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
     //
     id newColl = [m_coll valueForKey:key];
     
-    return [[AHGCollection alloc] initWithCollection:newColl builder:m_builder];
+    return [[AHGCollection alloc] initWithCollection:newColl];
 }
 
 - (AHGCollection *)filterWithKey:(NSString *)key

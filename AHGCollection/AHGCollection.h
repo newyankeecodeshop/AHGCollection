@@ -12,10 +12,8 @@ typedef NSObject<NSCopying, NSFastEnumeration> AHGEnumerable;
 
 typedef id (^AHGTransformBlock)(id anObject);
 typedef id (^AHGFoldBlock)(id resultObject, id anObject);
-typedef AHGEnumerable* (^AHGEnumerateBlock)(id anObject);
+typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
 typedef BOOL (^AHGPredicateBlock)(id anObject);
-
-@class AHGBuilder;
 
 /**
  * A class which provides functional programming operations on various Foundation collection classes.
@@ -25,13 +23,13 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
 /* Test if the underlying collection has at least one element */
 @property (readonly, nonatomic, getter = isEmpty) BOOL empty;
 
-- (id)initWithCollection:(AHGEnumerable *)collection builder:(AHGBuilder *)builder;
+- (id)initWithCollection:(AHGEnumerable *)collection;
 
 /* Create a new collection by applying a transform to all elements in this collection */
 - (AHGCollection *)map:(AHGTransformBlock)transform;
 
 /* Create a new collection by collapsing a list of values for each element in this collection */
-- (AHGCollection *)flatMap:(AHGEnumerateBlock)transform;
+- (AHGCollection *)flatMap:(AHGFlatMapBlock)transform;
 
 /* Return a new collection with elements that pass the predicate test */
 - (AHGCollection *)filter:(AHGPredicateBlock)predicate;

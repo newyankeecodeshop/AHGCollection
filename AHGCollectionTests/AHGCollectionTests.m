@@ -75,7 +75,8 @@
         return [str stringByAppendingString:@"!"];
     }] allObjects];
     
-	XCTAssertEqual(3UL, [result2 count], @"Wrong length for set mapping");
+	NSUInteger targetCount = 3;
+	XCTAssertEqual(targetCount, [result2 count], @"Wrong length for set mapping");
 	
 	for (id testObj in test) {
 		XCTAssertTrue([result2 containsObject:testObj], @"Map function didn't work");
@@ -90,7 +91,10 @@
     NSFileManager *fileMgr = [NSFileManager defaultManager];
     NSError *__block myErr = nil;
     
-    NSArray *paths = @[@"/Library"];
+	NSBundle *mainBundle = [NSBundle bundleForClass:self.class];
+	NSString *rootPath = [mainBundle bundlePath];
+	
+    NSArray *paths = @[rootPath];
     AHGCollection *files = [AHGNewColl(paths) flatMap:^NSObject<NSCopying,NSFastEnumeration> *(id obj) {
         return [fileMgr contentsOfDirectoryAtPath:obj error:&myErr];
     }];
@@ -98,19 +102,20 @@
     XCTAssertFalse(files.isEmpty, @"Should have found some files");
     
     for (NSString *file in files) {
-        NSString *path = [@"/Library" stringByAppendingPathComponent:file];
+        NSString *path = [rootPath stringByAppendingPathComponent:file];
         XCTAssertTrue([fileMgr fileExistsAtPath:path], @"Flat map didn't work!");
     }
 
     files = [[AHGNewColl(paths) flatMap:^NSObject<NSCopying,NSFastEnumeration> *(NSString *path) {
-//        NSLog(@"%@", path);
+        NSLog(@"%@", path);
         return [fileMgr contentsOfDirectoryAtPath:path error:&myErr];
     }] flatMap:^NSObject<NSCopying,NSFastEnumeration> *(NSString *path) {
-//        NSLog(@"\t%@", path);
-        return [fileMgr contentsOfDirectoryAtPath:[@"/Library" stringByAppendingPathComponent:path] error:&myErr];
+        NSLog(@"\t%@", path);
+        return [fileMgr contentsOfDirectoryAtPath:[rootPath stringByAppendingPathComponent:path] error:&myErr];
     }];
     
-    XCTAssertFalse(files.isEmpty, @"Should have found some files");
+	NSUInteger numFiles = 1;
+    XCTAssertEqual(numFiles, [files.allObjects count], @"Should have found InfoPlist.strings");
 }
 
 - (void)testFilter
@@ -198,20 +203,24 @@
 
 - (void)testFilterWithKey
 {
+	NSUInteger targetCount = 2;
+	
     NSArray *result = [[AHGNewColl(self.dictValues) filterWithKey:@"a"] allObjects];
-    XCTAssertEqual(2UL, result.count, @"Count is wrong");
+    XCTAssertEqual(targetCount, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject[@"name"], @"First value is wrong");
     XCTAssertEqualObjects(@"Andrew3", result.lastObject[@"name"], @"Last value is wrong");
 }
 
 - (void)testGroupByKey
 {
+	NSUInteger count1 = 4, count2 = 2;
+	
     NSDictionary *result = [AHGNewColl(self.dictValues) groupByKey:@"name"];
-    XCTAssertEqual(4UL, result.count, @"Count is wrong");
+    XCTAssertEqual(count1, result.count, @"Count is wrong");
     
     for (id key in result) {
         NSArray *group = result[key];
-        XCTAssertEqual(2UL, group.count, @"Group count is wrong");
+        XCTAssertEqual(count2, group.count, @"Group count is wrong");
     }
 }
 

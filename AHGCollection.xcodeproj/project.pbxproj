@@ -16,8 +16,10 @@
 		2D004F57187226B600704E68 /* libAHGCollection.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D004F3F187226B600704E68 /* libAHGCollection.a */; };
 		2D004F5D187226B600704E68 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2D004F5B187226B600704E68 /* InfoPlist.strings */; };
 		2D004F5F187226B600704E68 /* AHGCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D004F5E187226B600704E68 /* AHGCollectionTests.m */; };
-		2DDC21231875CA1B00B509C1 /* AHGBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DDC21221875CA1B00B509C1 /* AHGBuilder.m */; };
-		2DDC21241875CA1B00B509C1 /* AHGBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DDC21221875CA1B00B509C1 /* AHGBuilder.m */; };
+		499D843018B552BA00C4C7BC /* AHGEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 499D842F18B552BA00C4C7BC /* AHGEnumeration.m */; };
+		499D843118B552BA00C4C7BC /* AHGEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 499D842F18B552BA00C4C7BC /* AHGEnumeration.m */; };
+		499E16B218B6486C00DCB552 /* AHGEnumerationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 499E16B118B6486C00DCB552 /* AHGEnumerationTests.m */; };
+		499E16B418B64ABD00DCB552 /* Test Data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 499E16B318B64ABD00DCB552 /* Test Data.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,8 +57,10 @@
 		2D004F5A187226B600704E68 /* AHGCollectionTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AHGCollectionTests-Info.plist"; sourceTree = "<group>"; };
 		2D004F5C187226B600704E68 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2D004F5E187226B600704E68 /* AHGCollectionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHGCollectionTests.m; sourceTree = "<group>"; };
-		2DDC21211875CA1B00B509C1 /* AHGBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHGBuilder.h; sourceTree = "<group>"; };
-		2DDC21221875CA1B00B509C1 /* AHGBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHGBuilder.m; sourceTree = "<group>"; };
+		499D842E18B552BA00C4C7BC /* AHGEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHGEnumeration.h; sourceTree = "<group>"; };
+		499D842F18B552BA00C4C7BC /* AHGEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHGEnumeration.m; sourceTree = "<group>"; };
+		499E16B118B6486C00DCB552 /* AHGEnumerationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHGEnumerationTests.m; sourceTree = "<group>"; };
+		499E16B318B64ABD00DCB552 /* Test Data.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Test Data.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,8 +120,8 @@
 			children = (
 				2D004F47187226B600704E68 /* AHGCollection.h */,
 				2D004F49187226B600704E68 /* AHGCollection.m */,
-				2DDC21211875CA1B00B509C1 /* AHGBuilder.h */,
-				2DDC21221875CA1B00B509C1 /* AHGBuilder.m */,
+				499D842E18B552BA00C4C7BC /* AHGEnumeration.h */,
+				499D842F18B552BA00C4C7BC /* AHGEnumeration.m */,
 				2D004F45187226B600704E68 /* Supporting Files */,
 			);
 			path = AHGCollection;
@@ -135,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				2D004F5E187226B600704E68 /* AHGCollectionTests.m */,
+				499E16B118B6486C00DCB552 /* AHGEnumerationTests.m */,
 				2D004F59187226B600704E68 /* Supporting Files */,
 			);
 			path = AHGCollectionTests;
@@ -145,6 +150,7 @@
 			children = (
 				2D004F5A187226B600704E68 /* AHGCollectionTests-Info.plist */,
 				2D004F5B187226B600704E68 /* InfoPlist.strings */,
+				499E16B318B64ABD00DCB552 /* Test Data.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -220,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D004F5D187226B600704E68 /* InfoPlist.strings in Resources */,
+				499E16B418B64ABD00DCB552 /* Test Data.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,7 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D004F4A187226B600704E68 /* AHGCollection.m in Sources */,
-				2DDC21231875CA1B00B509C1 /* AHGBuilder.m in Sources */,
+				499D843018B552BA00C4C7BC /* AHGEnumeration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,7 +247,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D004F5F187226B600704E68 /* AHGCollectionTests.m in Sources */,
-				2DDC21241875CA1B00B509C1 /* AHGBuilder.m in Sources */,
+				499E16B218B6486C00DCB552 /* AHGEnumerationTests.m in Sources */,
+				499D843118B552BA00C4C7BC /* AHGEnumeration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
