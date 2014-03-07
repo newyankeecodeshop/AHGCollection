@@ -12,7 +12,7 @@ typedef id (^AHGTransformBlock)(id anObject);
 typedef BOOL (^AHGPredicateBlock)(id anObject);
 typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
 
-@interface AHGFastEnumeration : NSObject<NSCopying, NSFastEnumeration>
+@interface AHGFastEnumeration : NSObject<NSFastEnumeration>
 
 - (instancetype)initWithSource:(id<NSFastEnumeration>)source;
 

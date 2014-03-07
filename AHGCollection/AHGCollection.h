@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NSObject<NSCopying, NSFastEnumeration> AHGEnumerable;
+// Foundation collections implement these two protocols
+typedef NSObject<NSCopying, NSFastEnumeration> AHGCoreCollection;
 
 typedef id (^AHGTransformBlock)(id anObject);
 typedef id (^AHGFoldBlock)(id resultObject, id anObject);
@@ -16,14 +17,28 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
 typedef BOOL (^AHGPredicateBlock)(id anObject);
 
 /**
- * A class which provides functional programming operations on various Foundation collection classes.
+ *  A class which provides functional programming operations on various Foundation collection classes.
  */
 @interface AHGCollection : NSObject <NSCopying, NSFastEnumeration>
 
-/* Test if the underlying collection has at least one element */
+/**
+ *  Test if the underlying collection has at least one element
+ */
 @property (readonly, nonatomic, getter = isEmpty) BOOL empty;
 
-- (id)initWithCollection:(AHGEnumerable *)collection;
+/**
+ *  Initializes an `AHGCollection` instance with a backing collection.
+ *
+ *  @param collection An enumerable object, typically a Foundation collection.
+ *
+ *  @return The wrapped collection
+ */
+- (id)initWithCollection:(AHGCoreCollection *)collection;
+
+/**
+ A basic iteration through the class.
+ */
+- (void)forEach:(void (^)(id obj, BOOL *stop))block;
 
 /* Create a new collection by applying a transform to all elements in this collection */
 - (AHGCollection *)map:(AHGTransformBlock)transform;
@@ -60,7 +75,7 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
 /**
  * Create a Collection with an existing Foundation collection.
  */
-AHGCollection *AHGNewColl(AHGEnumerable *coll);
+AHGCollection *AHGNewColl(AHGCoreCollection *coll);
 
 /**
  * A category that adds operations using KVC key names instead of blocks.

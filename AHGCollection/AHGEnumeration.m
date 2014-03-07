@@ -30,11 +30,6 @@
 	return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
-{
-	return self;
-}
-
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
 								  objects:(id __unsafe_unretained [])buffer
 									count:(NSUInteger)len

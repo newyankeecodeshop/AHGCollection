@@ -9,7 +9,7 @@
 #import "AHGCollection.h"
 #import "AHGEnumeration.h"
 
-AHGCollection *AHGNewColl(AHGEnumerable *coll)
+AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 {
     return [[AHGCollection alloc] initWithCollection:coll];
 }
@@ -18,13 +18,26 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
 
 @implementation AHGCollection
 {
-    AHGEnumerable *m_coll;
+    NSObject<NSFastEnumeration> *m_coll;
 }
 
-- (id)initWithCollection:(AHGEnumerable *)collection
+- (id)initWithCollection:(AHGCoreCollection *)collection
 {
     if ((self = [super init])) {
         m_coll = [collection copy];
+    }
+    
+    return self;
+}
+
+/* 
+ AHGFastEnumeration doesn't implement NSCopying, and in the cases where this class uses AHGFastEnumeration,
+ there is no need to copy the objects.
+ */
+- (id)initWithEnumeration:(AHGFastEnumeration *)enumeration
+{
+    if ((self = [super init])) {
+        m_coll = enumeration;
     }
     
     return self;
@@ -51,6 +64,19 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
     return YES;
 }
 
+- (void)forEach:(void (^)(id obj, BOOL *stop))block
+{
+	BOOL stop = NO;
+	
+	for (id obj in m_coll) {
+		block(obj, &stop);
+		
+		if (stop) {
+			break;
+		}
+	}
+}
+
 #pragma mark Collection Transformations
 
 - (AHGCollection *)map:(AHGTransformBlock)transform
@@ -58,21 +84,21 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
 	// This enumerator object wraps the source collection with a transform function
 	AHGTransformEnumerator *transformer = [[AHGTransformEnumerator alloc] initWithSource:m_coll
 																			   transform:transform];
-	return [[AHGCollection alloc] initWithCollection:transformer];
+	return [[AHGCollection alloc] initWithEnumeration:transformer];
 }
 
 - (AHGCollection *)flatMap:(AHGFlatMapBlock)transform
 {
 	AHGFlatMapEnumerator *flatMapper = [[AHGFlatMapEnumerator alloc] initWithSource:m_coll
 																		  transform:transform];
-	return [[AHGCollection alloc] initWithCollection:flatMapper];
+	return [[AHGCollection alloc] initWithEnumeration:flatMapper];
 }
 
 - (AHGCollection *)filter:(AHGPredicateBlock)predicate
 {
 	AHGFilterEnumerator *filter = [[AHGFilterEnumerator alloc] initWithSource:m_coll
 																	   filter:predicate];
-	return [[AHGCollection alloc] initWithCollection:filter];
+	return [[AHGCollection alloc] initWithEnumeration:filter];
 }
 
 - (AHGCollection *)filterNot:(AHGPredicateBlock)predicate
@@ -147,6 +173,11 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
 
 - (NSArray *)allObjects
 {
+	// If the backing collection is already an array, we can return it.
+	if ([m_coll isKindOfClass:[NSArray class]]) {
+		return (NSArray *)m_coll;
+	}
+	
 	NSMutableArray *array = [NSMutableArray array];
 	
 	for (id obj in m_coll) {
@@ -164,11 +195,9 @@ AHGCollection *AHGNewColl(AHGEnumerable *coll)
 
 - (AHGCollection *)mapWithKey:(NSString *)key
 {
-    // Categories on NSArray and NSSet cause this call to do the right thing for mapping here.
-    //
-    id newColl = [m_coll valueForKey:key];
-    
-    return [[AHGCollection alloc] initWithCollection:newColl];
+    return [self map:^id(id obj) {
+		return [obj valueForKey:key];
+	}];
 }
 
 - (AHGCollection *)filterWithKey:(NSString *)key
