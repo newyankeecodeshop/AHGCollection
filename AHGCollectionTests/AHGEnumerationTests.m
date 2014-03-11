@@ -44,7 +44,7 @@ static id (^ txStrFunc)(id) = ^(NSString *anObject) {
 
 - (void)testTransformer
 {
-	AHGTransformEnumerator *transformer = [[AHGTransformEnumerator alloc] initWithSource:self.smallArray
+	AHGTransformEnumeration *transformer = [[AHGTransformEnumeration alloc] initWithSource:self.smallArray
 																			   transform:txFunc];
 	NSUInteger size = 0;
 	
@@ -57,7 +57,7 @@ static id (^ txStrFunc)(id) = ^(NSString *anObject) {
 	
 	// Now with a larger array
 	NSArray *largeArray = [self.testData objectForKey:@"testTransformer"];
-	transformer = [[AHGTransformEnumerator alloc] initWithSource:largeArray transform:txStrFunc];
+	transformer = [[AHGTransformEnumeration alloc] initWithSource:largeArray transform:txStrFunc];
 	
 	size = [self validateTransformer:transformer];
 	XCTAssertEqual(size, largeArray.count, @"Wrong number of values in enum");
@@ -67,7 +67,7 @@ static id (^ txStrFunc)(id) = ^(NSString *anObject) {
 	XCTAssertEqual(size, largeArray.count, @"2nd for/in failed");
 }
 
-- (NSUInteger)validateTransformer:(AHGTransformEnumerator *)transformer
+- (NSUInteger)validateTransformer:(AHGTransformEnumeration *)transformer
 {
 	NSUInteger size = 0;
 
@@ -83,7 +83,7 @@ static id (^ txStrFunc)(id) = ^(NSString *anObject) {
 - (void)testTransformerWithSet
 {
 	NSSet *largeSet = [NSSet setWithArray:[self.testData objectForKey:@"testTransformer"]];
-	AHGTransformEnumerator *transformer = [[AHGTransformEnumerator alloc] initWithSource:largeSet
+	AHGTransformEnumeration *transformer = [[AHGTransformEnumeration alloc] initWithSource:largeSet
 																			   transform:txStrFunc];
 	
 	NSUInteger size = [self validateTransformer:transformer];
@@ -110,7 +110,7 @@ static id (^ txStrFunc)(id) = ^(NSString *anObject) {
 	
 	NSDictionary *myData = self.testData;
 	NSArray *rootArray = [myData objectForKey:@"testFlatMapper"];
-	AHGFlatMapEnumerator *mapper = [[AHGFlatMapEnumerator alloc] initWithSource:rootArray
+	AHGFlatMapEnumeration *mapper = [[AHGFlatMapEnumeration alloc] initWithSource:rootArray
 																	  transform:mapBlock];
 	NSInteger counter = 0;
 	

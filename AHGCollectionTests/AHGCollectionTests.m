@@ -136,17 +136,17 @@
     XCTAssertEqualObjects(resultNot, testNot, @"FilterNot function didn't work");
 }
 
-- (void)testFolding
+- (void)testReduce
 {
     AHGCollection *strings = AHGNewColl(self.strings);
     
-    NSString *result = [strings foldLeft:@"" operator:^id(NSString *resultObject, NSString *anObject) {
+    NSString *result = [strings reduce:@"" withOperator:^id(NSString *resultObject, NSString *anObject) {
         return [resultObject stringByAppendingString:anObject];
     }];
     XCTAssertEqualObjects(@"helloworldtoo", result, @"Fold produced the wrong result");
     
     strings = AHGNewColl(@[]);
-    result = [strings foldLeft:@"empty" operator:^id(id resultObject, id anObject) {
+    result = [strings reduce:@"empty" withOperator:^id(id resultObject, id anObject) {
         return [resultObject stringByAppendingString:anObject];
     }];
     XCTAssertEqualObjects(@"empty", result, @"Fold with empty array failed");

@@ -1,10 +1,26 @@
-//
-//  AHGCollection.h
-//  AHGCollection
-//
-//  Created by Andrew on 12/30/2013.
-//  Copyright (c) 2013 Andrew Goodale. All rights reserved.
-//
+/*
+ AHGCollection.h
+ 
+ Copyright (c) 2014 Andrew H. Goodale
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+*/
 
 #import <Foundation/Foundation.h>
 
@@ -24,56 +40,101 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
 /**
  *  Test if the underlying collection has at least one element
  */
-@property (readonly, nonatomic, getter = isEmpty) BOOL empty;
+@property (readonly, nonatomic, getter=isEmpty) BOOL empty;
 
 /**
  *  Initializes an `AHGCollection` instance with a backing collection.
  *
  *  @param collection An enumerable object, typically a Foundation collection.
- *
- *  @return The wrapped collection
+ *  @return A new collection object
  */
 - (id)initWithCollection:(AHGCoreCollection *)collection;
 
 /**
- A basic iteration through the class.
+ *  A basic iteration through the objects in the collection.
+ *  The block can break out of the loop early by setting the `stop` parameter to `YES`.
+ *
+ *  @param block The block to execute for each object in the collection.
  */
 - (void)forEach:(void (^)(id obj, BOOL *stop))block;
 
-/* Create a new collection by applying a transform to all elements in this collection */
+/**
+ *  Creates a new collection by applying a transform to all elements in this collection.
+ *
+ *  @param transform A block that transforms values in the collection.
+ *  @return A mapped collection.
+ */
 - (AHGCollection *)map:(AHGTransformBlock)transform;
 
-/* Create a new collection by collapsing a list of values for each element in this collection */
+/**
+ *  Creates a new collection by collapsing a list of values for each element in this collection.
+ *
+ *  @param transform A block that returns a collection for each object.
+ *  @return A mapped collection.
+ */
 - (AHGCollection *)flatMap:(AHGFlatMapBlock)transform;
 
-/* Return a new collection with elements that pass the predicate test */
+/**
+ *  Creates a new collection with elements that pass the predicate test.
+ *
+ *  @param predicate A block that tests each object in the collection.
+ *  @return A filtered collection.
+ */
 - (AHGCollection *)filter:(AHGPredicateBlock)predicate;
 
-/* Return a new collection with elements that fail the predicate test */
+/**
+ *  Creates a new collection with elements that fail the predicate test.
+ *
+ *  @param predicate A block that tests each object in the collection.
+ *  @return A filtered collection.
+ */
 - (AHGCollection *)filterNot:(AHGPredicateBlock)predicate;
 
-/* Reduce a collection to a single value using an optional start value */
-- (id)foldLeft:(id)startValue operator:(AHGFoldBlock)folder;
+/** 
+ *  Reduce a collection to a single value using an optional start value.
+ *
+ *  @param startValue An initial value to pass to the operator block.
+ *  @param block A block that returns a new value based on each object in the collection.
+ *  @return The result of the reduction.
+ */
+- (id)reduce:(id)startValue withOperator:(AHGFoldBlock)block;
 
-/* Return a dictionary of arrays containing values using the transform block to generate keys */
+/** 
+ *  Group objects in this collection using a function that maps each object to a key.
+ *
+ *  @param transform A block that returns a key value for each object in the collection.
+ *  @return A dictionary where each key points to an array of values from the collection.
+ */
 - (NSDictionary *)groupBy:(AHGTransformBlock)transform;
 
-/* Return the first value in the collection where predicate is true */
+/**
+ *  Return the first value in the collection where predicate is true.
+ *
+ *  @param predicate A block that tests objects in the collection.
+ */
 - (id)find:(AHGPredicateBlock)predicate;
 
-/* Tests whether predicate is true for any value in the collection */
+/**
+ *  Tests whether predicate is true for any value in the collection.
+ */
 - (BOOL)exists:(AHGPredicateBlock)predicate;
 
-/* Tests whether predicate is true for all values in the collection */
+/**
+ *  Tests whether predicate is true for all values in the collection.
+ */
 - (BOOL)every:(AHGPredicateBlock)predicate;
 
-/* Returns an array containing the members of this collection */
+/** 
+ *  Returns an array containing the members of this collection.
+ */
 - (NSArray *)allObjects;
 
 @end
 
 /**
  * Create a Collection with an existing Foundation collection.
+ *
+ * @param coll A collection of objects.
  */
 AHGCollection *AHGNewColl(AHGCoreCollection *coll);
 
@@ -82,13 +143,25 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll);
  */
 @interface AHGCollection (KeyValueCoding)
 
-/* Return a new collection containing the [valueForKey:] for each element in this collection */
+/**
+ *  Return a new collection containing the [valueForKey:] for each object in this collection.
+ *
+ *  @param key The key used to lookup the map value.
+ */
 - (AHGCollection *)mapWithKey:(NSString *)key;
 
-/* Return a new collection containing elements that have a property value of YES or non-nil for the given key */
+/**
+ *  Return a new collection containing elements that have a property value of YES or non-nil for the given key.
+ *
+ *  @param key The key used to lookup the filter value.
+ */
 - (AHGCollection *)filterWithKey:(NSString *)key;
 
-/* Return a dictionary whose keys are the [valueForKey:] for each element in this collection */
+/**
+ *  Return a dictionary whose keys are the [valueForKey:] for each element in this collection.
+ *
+ *  @param key The key used to lookup the grouping value.
+ */
 - (NSDictionary *)groupByKey:(NSString *)key;
 
 @end

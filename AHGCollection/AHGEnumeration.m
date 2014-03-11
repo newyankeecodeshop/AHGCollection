@@ -1,13 +1,30 @@
-//
-//  AHGEnumerator.m
-//  AHGCollection
-//
-//  Created by Andrew on 2/19/14.
-//  Copyright (c) 2014 Andrew Goodale. All rights reserved.
-//
+/*
+ AHGEnumeration.m
+ 
+ Copyright (c) 2014 Andrew H. Goodale
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+*/
 
 #import "AHGEnumeration.h"
 
+// The size of the buffer holding temporary objects during an enumeration
 #define BUFFER_LEN	16
 
 // These macros give some identity to the slots in the "extra" array
@@ -44,6 +61,7 @@
 	}
 	
 	if (SOURCE_COUNT(state) == 0) {
+        // The wrapped enumeration has no more objects, so we're done.
 		return 0;
 	}
 	else if (SOURCE_COUNT(state) == NEXT_INDEX(state)) {
@@ -68,7 +86,7 @@
 
 @end
 
-@implementation AHGTransformEnumerator
+@implementation AHGTransformEnumeration
 {
 	AHGTransformBlock	  m_transform;
 }
@@ -85,9 +103,6 @@
 					 sourceItems:(id __unsafe_unretained *)itemsPtr
 						  buffer:(id __strong *)buffer
 {
-	// Here, we have some objects. There may be more objects than will fit in our buffer.
-	// The nubmer of objects to return is the buffer size or the number of remaining objects, whichever is smaller.
-	//
 	NSUInteger numLeft = SOURCE_COUNT(state) - NEXT_INDEX(state);
 	NSUInteger itemCount = MIN(numLeft, BUFFER_LEN);
 	NSUInteger srcIndex = NEXT_INDEX(state);
@@ -105,7 +120,7 @@
 
 #pragma mark -
 
-@implementation AHGFilterEnumerator
+@implementation AHGFilterEnumeration
 {
 	AHGPredicateBlock	  m_filter;
 }
@@ -143,7 +158,7 @@
 
 #pragma mark -
 
-@implementation AHGFlatMapEnumerator
+@implementation AHGFlatMapEnumeration
 {
 	AHGFlatMapBlock		  m_mapper;
 	id<NSFastEnumeration> m_curValues;
