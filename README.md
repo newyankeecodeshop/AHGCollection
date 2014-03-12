@@ -60,9 +60,9 @@ NSString *result = [strings reduce:@"" withOperator:^id(NSString *resultObject, 
 // Produces @"hellotoyouagain"
 ```
 
-### Combing Operations
+### Combining Operations
 
-Many operations on a collection can be chained. The result is not evaluated until the collection is enumerated or converted into an `NSArray` using `[AHGCollection allobjects]`.
+Many operations on a collection can be chained together. The result is not evaluated until the collection is enumerated or converted into an `NSArray` using `[AHGCollection allobjects]`.
 
 ```objc
 NSNumber *num = [[[AHGNewColl(@[@"hello", @"to", @"you", @"again"]) filterNot:^BOOL(NSString *str) {
