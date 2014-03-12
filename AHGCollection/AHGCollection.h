@@ -37,18 +37,25 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 @interface AHGCollection : NSObject <NSCopying, NSFastEnumeration>
 
+/** @name Properties */
+
 /**
  *  Test if the underlying collection has at least one element
  */
 @property (readonly, nonatomic, getter=isEmpty) BOOL empty;
 
+/** @name Initializing a Collection */
+
 /**
- *  Initializes an `AHGCollection` instance with a backing collection.
+ *  Initializes an `AHGCollection` instance with a backing collection. If the collection is mutable, the `copy` method
+ *  will be invoked so that an immutable collection is referenced by this object.
  *
  *  @param collection An enumerable object, typically a Foundation collection.
  *  @return A new collection object
  */
 - (id)initWithCollection:(AHGCoreCollection *)collection;
+
+/** @name Basic Iteration */
 
 /**
  *  A basic iteration through the objects in the collection.
@@ -57,6 +64,8 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  @param block The block to execute for each object in the collection.
  */
 - (void)forEach:(void (^)(id obj, BOOL *stop))block;
+
+/** @name Transforming a Collection */
 
 /**
  *  Creates a new collection by applying a transform to all elements in this collection.
@@ -107,6 +116,8 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 - (NSDictionary *)groupBy:(AHGTransformBlock)transform;
 
+/** @name Testing objects in a Collection */
+
 /**
  *  Return the first value in the collection where predicate is true.
  *
@@ -116,13 +127,19 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
 
 /**
  *  Tests whether predicate is true for any value in the collection.
+ *
+ *  @param predicate A block that tests objects in the collection.
  */
 - (BOOL)exists:(AHGPredicateBlock)predicate;
 
 /**
  *  Tests whether predicate is true for all values in the collection.
+ *
+ *  @param predicate A block that tests objects in the collection.
  */
 - (BOOL)every:(AHGPredicateBlock)predicate;
+
+/** @name Converting a Collection */
 
 /** 
  *  Returns an array containing the members of this collection.
@@ -131,20 +148,19 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
 
 @end
 
-/**
+/*
  * Create a Collection with an existing Foundation collection.
  *
  * @param coll A collection of objects.
  */
 AHGCollection *AHGNewColl(AHGCoreCollection *coll);
 
-/**
- * A category that adds operations using KVC key names instead of blocks.
- */
+#pragma mark
+
 @interface AHGCollection (KeyValueCoding)
 
 /**
- *  Return a new collection containing the [valueForKey:] for each object in this collection.
+ *  Return a new collection containing the `valueForKey:` for each object in this collection.
  *
  *  @param key The key used to lookup the map value.
  */
@@ -158,7 +174,7 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll);
 - (AHGCollection *)filterWithKey:(NSString *)key;
 
 /**
- *  Return a dictionary whose keys are the [valueForKey:] for each element in this collection.
+ *  Return a dictionary whose keys are the `valueForKey:` for each element in this collection.
  *
  *  @param key The key used to lookup the grouping value.
  */

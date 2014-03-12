@@ -34,12 +34,16 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
  */
 @interface AHGFastEnumeration : NSObject<NSFastEnumeration>
 
+/** @name Initializing the Enumeration */
+
 /**
  * The designated initializer.
  * 
  * @param source The collection being wrapped by this enumeration.
  */
 - (instancetype)initWithSource:(id<NSFastEnumeration>)source;
+
+/** @name Enumeration */
 
 /**
  * Not for public use - subclasses should implement this method and populate the buffer `NSFastEnumerationState` with
@@ -62,6 +66,8 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
  */
 @interface AHGTransformEnumeration : AHGFastEnumeration
 
+/** @name Initializing the Enumeration */
+
 /**
  * The designated initializer.
  *
@@ -79,6 +85,8 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
  */
 @interface AHGFilterEnumeration : AHGFastEnumeration
 
+/** @name Initializing the Enumeration */
+
 /**
  * The designated initializer.
  *
@@ -95,6 +103,8 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
  * A fast enumeration that flattens an enumeration of collections into a single enumeration.
  */
 @interface AHGFlatMapEnumeration : AHGFastEnumeration
+
+/** @name Initializing the Enumeration */
 
 /**
  * The designated initializer.
