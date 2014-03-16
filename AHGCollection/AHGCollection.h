@@ -146,6 +146,14 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 - (NSArray *)allObjects;
 
+/**
+ *  Returns a set containing the members of this collection. Since sets do not allow duplicates,
+ *  the size of the set may be smaller than the size of this collection.
+ *
+ *  @return An immutable set
+ */
+- (NSSet *)setOfObjects;
+
 @end
 
 /*

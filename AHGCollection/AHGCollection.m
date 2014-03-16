@@ -203,6 +203,17 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 	return [array copy];
 }
 
+- (NSSet *)setOfObjects
+{
+    NSMutableSet *set = [NSMutableSet set];
+    
+    for (id obj in m_coll) {
+        [set addObject:obj];
+    }
+    
+    return [set copy];
+}
+
 @end
 
 #pragma mark
