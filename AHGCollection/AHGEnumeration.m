@@ -24,6 +24,7 @@
 
 #import "AHGEnumeration.h"
 #import <objc/runtime.h>
+#import <pthread.h>
 
 // The size of the buffer holding temporary objects during an enumeration
 #define BUFFER_LEN	16
@@ -118,7 +119,7 @@
 
 + (instancetype)stateForEnum:(AHGFastEnumeration *)fastEnum
 {
-    void *key = (__bridge void *)([NSThread currentThread]);
+    void *key = pthread_self();
     AHGFastEnumerationState *myState = objc_getAssociatedObject(fastEnum, key);
     
     if (myState == nil) {
