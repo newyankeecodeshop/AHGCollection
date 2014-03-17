@@ -32,7 +32,7 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
  * A base class for implementing an `NSFastEnumeration` in terms of a source collection. This class provides
  * an internal buffer for temporary objects created during the enumeration process. It is used when
  */
-@interface AHGFastEnumeration : NSObject<NSFastEnumeration>
+@interface AHGFastEnumeration : NSObject<NSFastEnumeration, NSCopying>
 
 /** @name Initializing the Enumeration */
 
@@ -51,11 +51,13 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
  *
  * @param state The current enumeration state
  * @param itemsPtr Items from the wrapped collection in this state
- * @param buffer A 16-slot buffer to store temporary objects
+ * @param buffer A buffer to store temporary objects
+ * @param len The length of the buffer
  */
 - (NSUInteger)enumerateWithState:(NSFastEnumerationState *)state
-					 sourceItems:(id __unsafe_unretained *)itemsPtr
-						  buffer:(id __strong *)buffer;
+                     sourceItems:(id __unsafe_unretained *)itemsPtr
+                         objects:(id __strong *)buffer
+                           count:(NSUInteger)len;
 
 @end
 

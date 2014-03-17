@@ -46,19 +46,6 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     return self;
 }
 
-/* 
- AHGFastEnumeration doesn't implement NSCopying, and in the cases where this class uses AHGFastEnumeration,
- there is no need to copy the objects.
- */
-- (id)initWithEnumeration:(AHGFastEnumeration *)enumeration
-{
-    if ((self = [super init])) {
-        m_coll = enumeration;
-    }
-    
-    return self;
-}
-
 - (id)copyWithZone:(NSZone *)zone
 {
     return self;
@@ -100,21 +87,21 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 	// This enumeration object wraps the source collection with a transform function
 	AHGTransformEnumeration *transformer = [[AHGTransformEnumeration alloc] initWithSource:m_coll
 																			   transform:transform];
-	return [[AHGCollection alloc] initWithEnumeration:transformer];
+	return [[AHGCollection alloc] initWithCollection:transformer];
 }
 
 - (AHGCollection *)flatMap:(AHGFlatMapBlock)transform
 {
 	AHGFlatMapEnumeration *flatMapper = [[AHGFlatMapEnumeration alloc] initWithSource:m_coll
 																		  transform:transform];
-	return [[AHGCollection alloc] initWithEnumeration:flatMapper];
+	return [[AHGCollection alloc] initWithCollection:flatMapper];
 }
 
 - (AHGCollection *)filter:(AHGPredicateBlock)predicate
 {
 	AHGFilterEnumeration *filter = [[AHGFilterEnumeration alloc] initWithSource:m_coll
 																	   filter:predicate];
-	return [[AHGCollection alloc] initWithEnumeration:filter];
+	return [[AHGCollection alloc] initWithCollection:filter];
 }
 
 - (AHGCollection *)filterNot:(AHGPredicateBlock)predicate
