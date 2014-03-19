@@ -60,7 +60,9 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 
 - (BOOL)isEmpty
 {
-    for (id obj in m_coll) {
+    id obj;
+    
+    for (obj in m_coll) {
         return NO;
     }
     
@@ -207,14 +209,19 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 
 @implementation AHGCollection (KeyValueCoding)
 
-- (AHGCollection *)mapWithKey:(NSString *)key
+- (AHGCollection *)mapWithKeyValue:(NSString *)key
 {
-    return [self map:^id(id obj) {
-		return [obj valueForKey:key];
-	}];
+    // Use the built-in ability for collections such as NSArray and NSSet to create mapped collections.
+    // This has the benefit of enforcing constraints within the new collection, such as an NSSet producing
+    // a mapped collection with no duplicates. TODO: Fix when m_coll is an NSDictionary.
+    //
+    AHGCoreCollection *newColl = [m_coll valueForKey:key];
+    NSAssert([newColl conformsToProtocol:@protocol(NSFastEnumeration)], @"Collection needs to implement valueForKey:");
+    
+    return [[AHGCollection alloc] initWithCollection:newColl];
 }
 
-- (AHGCollection *)filterWithKey:(NSString *)key
+- (AHGCollection *)filterWithKeyValue:(NSString *)key
 {
     return [self filter:^BOOL(id obj) {
         id value = [obj valueForKey:key];
@@ -228,10 +235,12 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     }];
 }
 
-- (NSDictionary *)groupByKey:(NSString *)key
+- (NSDictionary *)groupByKeyValue:(NSString *)key
 {
     return [self groupBy:^id(id obj) {
-        return [obj valueForKey:key];   // Return [NSNull null] for nil?
+        id value = [obj valueForKey:key];
+        
+        return value ? value : [NSNull null];   // Return [NSNull null] for nil because keys can't be nil
     }];
 }
 

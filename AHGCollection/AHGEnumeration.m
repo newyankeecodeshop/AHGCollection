@@ -113,6 +113,19 @@
 	return 0;
 }
 
+#pragma Key-Value Coding
+
+/*
+ * To match up with the behavior of NSArray and NSSet, we override valueForKey: and return an enumeration
+ * over values for the given key.
+ */
+- (id)valueForKey:(NSString *)key
+{
+    return [[AHGTransformEnumeration alloc] initWithSource:self transform:^id(id anObject) {
+        return [anObject valueForKey:key];
+    }];
+}
+
 @end
 
 @implementation AHGFastEnumerationState

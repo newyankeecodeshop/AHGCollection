@@ -192,30 +192,39 @@
     XCTAssertTrue(noneEmpty, @"Every didn't work");
 }
 
-- (void)testMapWithKey
+- (void)testMapWithKeyValue
 {
-    NSArray *result = [[AHGNewColl(self.dictValues) mapWithKey:@"name"] allObjects];
+    NSArray *result = [[AHGNewColl(self.dictValues) mapWithKeyValue:@"name"] allObjects];
     
     XCTAssertEqual(self.dictValues.count, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject, @"First value is wrong");
     XCTAssertEqualObjects(@"Andrew4", result.lastObject, @"Last value is wrong");
+    
+    // Test that mapping works correctly when the collection has had prior operations invoked.
+    // This tests that the AHGFastEnumeration implementation of valueForKey: is doing the right thing.
+    //
+    result = [[[AHGNewColl(self.dictValues) filter:^BOOL(id anObject) {
+        return [anObject valueForKey:@"a"] != nil;
+    }] mapWithKeyValue:@"name"] allObjects];
+    
+    XCTAssertEqual(2, result.count, @"Count is wrong after filtering");
 }
 
-- (void)testFilterWithKey
+- (void)testFilterWithKeyValue
 {
 	NSUInteger targetCount = 2;
 	
-    NSArray *result = [[AHGNewColl(self.dictValues) filterWithKey:@"a"] allObjects];
+    NSArray *result = [[AHGNewColl(self.dictValues) filterWithKeyValue:@"a"] allObjects];
     XCTAssertEqual(targetCount, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject[@"name"], @"First value is wrong");
     XCTAssertEqualObjects(@"Andrew3", result.lastObject[@"name"], @"Last value is wrong");
 }
 
-- (void)testGroupByKey
+- (void)testGroupByKeyValue
 {
 	NSUInteger count1 = 4, count2 = 2;
 	
-    NSDictionary *result = [AHGNewColl(self.dictValues) groupByKey:@"name"];
+    NSDictionary *result = [AHGNewColl(self.dictValues) groupByKeyValue:@"name"];
     XCTAssertEqual(count1, result.count, @"Count is wrong");
     
     for (id key in result) {
