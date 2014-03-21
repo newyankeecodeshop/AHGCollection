@@ -134,4 +134,32 @@ static id (^ txStrFunc)(id) = ^(NSString *anObject) {
 	}
 }
 
+- (void)testRanges
+{
+    NSArray *stuff = [self.testData objectForKey:@"testTransformer"];
+    NSRange range = NSMakeRange(0, 3);
+    
+    AHGRangeEnumeration *rangeEnum = [[AHGRangeEnumeration alloc] initWithSource:stuff range:range];
+    NSMutableArray *results = [NSMutableArray array];
+    
+    for (id obj in rangeEnum) {
+        [results addObject:obj];
+    }
+    
+    NSArray *test = @[@"a", @"b", @"c"];
+    XCTAssertEqualObjects(test, results, @"Range [0, 4) failed");
+    
+    // Now try it with a Set, getting the last three items
+    NSSet *stuffSet = [NSSet setWithArray:stuff];
+    
+    rangeEnum = [[AHGRangeEnumeration alloc] initWithSource:stuffSet range:NSMakeRange(24, 3)];
+    results = [NSMutableArray array];
+    
+    for (id obj in rangeEnum) {
+        [results addObject:obj];
+    }
+    
+    XCTAssertEqual(3, [results count], @"Didn't get the last three items");
+}
+
 @end

@@ -117,3 +117,22 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
 - (instancetype)initWithSource:(id<NSFastEnumeration>)source transform:(AHGFlatMapBlock)transform;
 
 @end
+
+#pragma mark
+
+/**
+ * A fast enumeration which includes a specific sub-range of the source enumeration.
+ */
+@interface AHGRangeEnumeration : AHGFastEnumeration
+
+/** @name Initializing the Enumeration */
+
+/**
+ * The designated initializer.
+ *
+ * @param source The collection being wrapped by this enumeration.
+ * @param range The range of elements to enumerate.
+ */
+- (instancetype)initWithSource:(id<NSFastEnumeration>)source range:(NSRange)range;
+
+@end

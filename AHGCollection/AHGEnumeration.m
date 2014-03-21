@@ -31,7 +31,7 @@
 
 // These macros give some identity to the slots in the "extra" array
 #define SOURCE_COUNT(state) state->extra[0]
-#define NEXT_INDEX(state)   state->extra[1]
+#define SOURCE_INDEX(state) state->extra[1]
 #define SUB_INDEX(state)	state->extra[2]
 
 /**
@@ -84,25 +84,32 @@
 		state->extra[0] = [m_source countByEnumeratingWithState:srcState objects:buffer count:len];
 		state->extra[1] = 0;
 		state->mutationsPtr = srcState->mutationsPtr;
+        state->itemsPtr = (id __unsafe_unretained *)(void *)myState->m_buffer;
 		state->state = 1;
 	}
-	
-	if (SOURCE_COUNT(state) == 0) {
-        // The wrapped enumeration has no more objects, so we're done.
-        [myState doneWithState];
-		return 0;
-	}
-	else if (SOURCE_COUNT(state) == NEXT_INDEX(state)) {
-		// We transformed everything in itemsPtr, see if more data is available
-		state->extra[0] = [m_source countByEnumeratingWithState:srcState objects:buffer count:len];
-		state->extra[1] = 0;
-	}
 
-	state->itemsPtr = (id __unsafe_unretained *)(void *)myState->m_buffer;
+    NSUInteger count = 0;
 	
-	// Let the subclass do the specific processing on each item in the source state itemsPtr
-	//
-	return [self enumerateWithState:state sourceItems:srcState->itemsPtr objects:myState->m_buffer count:BUFFER_LEN];
+    do {
+        if (SOURCE_COUNT(state) == 0) {
+            // The wrapped enumeration has no more objects, so we're done.
+            [myState doneWithState];
+            return 0;
+        }
+        
+        if (SOURCE_COUNT(state) == SOURCE_INDEX(state)) {
+            // We transformed everything in itemsPtr, see if more data is available
+            state->extra[0] = [m_source countByEnumeratingWithState:srcState objects:buffer count:len];
+            state->extra[1] = 0;
+        }
+
+        // Let the subclass do the specific processing on each item in the source state itemsPtr
+        //
+        count = [self enumerateWithState:state sourceItems:srcState->itemsPtr objects:myState->m_buffer count:BUFFER_LEN];
+    }
+    while (count == 0);     // 'count' might be zero because no items matched a filter, so keep enumerating
+    
+    return count;
 }
 
 - (NSUInteger)enumerateWithState:(NSFastEnumerationState *)state
@@ -173,17 +180,16 @@
                          objects:(id __strong *)buffer
                            count:(NSUInteger)len;
 {
-	NSUInteger numLeft = SOURCE_COUNT(state) - NEXT_INDEX(state);
-	NSUInteger itemCount = MIN(numLeft, len);
-	NSUInteger srcIndex = NEXT_INDEX(state);
+	NSUInteger count = 0;
+	NSUInteger srcIndex = SOURCE_INDEX(state);
 
-	for (NSUInteger i = 0; i < itemCount; ++i) {
-		buffer[i] = m_transform(itemsPtr[srcIndex++]);
+	while (count < len && srcIndex < SOURCE_COUNT(state)) {
+		buffer[count++] = m_transform(itemsPtr[srcIndex++]);
 	}
 	
-	NEXT_INDEX(state) = srcIndex;
+	SOURCE_INDEX(state) = srcIndex;
 	
-	return itemCount;
+	return count;
 }
 
 @end
@@ -209,18 +215,17 @@
                            count:(NSUInteger)len;
 {
 	NSUInteger count = 0;
-	NSUInteger srcIndex = NEXT_INDEX(state);
+	NSUInteger srcIndex = SOURCE_INDEX(state);
 
-	while ((SOURCE_COUNT(state) - srcIndex) > 0 && count < len) {
-		// Iterate through the returned objects extracting ones that match the filter
-		if (m_filter(itemsPtr[srcIndex++])) {
-			buffer[count++] = itemsPtr[srcIndex - 1];
+    // Iterate through the returned objects extracting ones that match the filter
+    // Break out when we have none left, or we've hit the buffer limit
+	for (; count < len && srcIndex < SOURCE_COUNT(state); ++srcIndex) {
+		if (m_filter(itemsPtr[srcIndex])) {
+			buffer[count++] = itemsPtr[srcIndex];
 		}
-		
-		// Break out when we have none left, or we've hit the buffer limit
 	}
 	
-	NEXT_INDEX(state) = srcIndex;
+	SOURCE_INDEX(state) = srcIndex;
 	
 	return count;
 }
@@ -249,9 +254,9 @@
                            count:(NSUInteger)len;
 {
 	NSUInteger count = 0, pos = 0;
-	NSUInteger srcIndex = NEXT_INDEX(state);
+	NSUInteger srcIndex = SOURCE_INDEX(state);
 	
-	while ((SOURCE_COUNT(state) - srcIndex) > 0 && count < len) {
+	while (srcIndex < SOURCE_COUNT(state) && count < len) {
 		// Save the result of the mapping in case the buffer can't hold all the values
 		if (m_curValues == nil) {
 			m_curValues = m_mapper(itemsPtr[srcIndex]);
@@ -280,7 +285,47 @@
 		}
 	}
 	
-	NEXT_INDEX(state) = srcIndex;
+	SOURCE_INDEX(state) = srcIndex;
+	
+	return count;
+}
+
+@end
+
+#pragma mark -
+
+@implementation AHGRangeEnumeration
+{
+    NSRange m_range;
+}
+
+- (instancetype)initWithSource:(id<NSFastEnumeration>)source range:(NSRange)range
+{
+	if ((self = [super initWithSource:source])) {
+		m_range = range;
+	}
+	return self;
+}
+
+- (NSUInteger)enumerateWithState:(NSFastEnumerationState *)state
+                     sourceItems:(id __unsafe_unretained *)itemsPtr
+                         objects:(id __strong *)buffer
+                           count:(NSUInteger)len;
+{
+	NSUInteger count = 0;
+	NSUInteger srcIndex = SOURCE_INDEX(state);
+    NSUInteger curLoc = SUB_INDEX(state);
+    
+    // Break out when we have none left, or we've hit the buffer
+    for (; count < len && srcIndex < SOURCE_COUNT(state); ++srcIndex) {
+        // This logic is similar to the filter enumeration - NSLocationInRange() is the filter function.
+        if (NSLocationInRange(curLoc++, m_range)) {
+            buffer[count++] = itemsPtr[srcIndex];
+        }
+    }
+	
+    SUB_INDEX(state) = curLoc;
+	SOURCE_INDEX(state) = srcIndex;
 	
 	return count;
 }

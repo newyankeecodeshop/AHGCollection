@@ -82,7 +82,7 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 	}
 }
 
-#pragma mark Collection Transformations
+#pragma mark Transforming a Collection
 
 - (AHGCollection *)map:(AHGTransformBlock)transform
 {
@@ -113,6 +113,21 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     }];
 }
 
+- (AHGCollection *)slice:(NSUInteger)startIndex until:(NSUInteger)endIndex
+{
+    NSRange range = NSMakeRange(startIndex, endIndex - startIndex);
+	AHGRangeEnumeration *rangeEnum = [[AHGRangeEnumeration alloc] initWithSource:m_coll range:range];
+    
+	return [[AHGCollection alloc] initWithCollection:rangeEnum];
+}
+
+- (AHGCollection *)sliceWithRange:(NSRange)range
+{
+	AHGRangeEnumeration *rangeEnum = [[AHGRangeEnumeration alloc] initWithSource:m_coll range:range];
+    
+	return [[AHGCollection alloc] initWithCollection:rangeEnum];    
+}
+
 - (id)reduce:(id)startValue withOperator:(AHGFoldBlock)folder
 {
     id result = startValue;
@@ -123,6 +138,8 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     
     return result;
 }
+
+#pragma mark Grouping and Sorting
 
 - (NSDictionary *)groupBy:(AHGTransformBlock)transform
 {

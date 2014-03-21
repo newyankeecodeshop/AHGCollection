@@ -99,6 +99,22 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 - (AHGCollection *)filterNot:(AHGPredicateBlock)predicate;
 
+/**
+ *  Creates a collection containing the objects from `startIndex` up to (but not including) `endIndex`. This method does not validate that the startIndex is within the range of the collecton. If the startIndex is greater than the count of elements,
+ *  the resulting collection will be empty.
+ *
+ *  @param startIndex The index of the first element to extract
+ *  @param endIndex   The index at which to stop extraction
+ */
+- (AHGCollection *)slice:(NSUInteger)startIndex until:(NSUInteger)endIndex;
+
+/**
+ *  Creates a collection containing objects that fall within the given range. Like `slice:until`, an empty collection is returned if the range falls outside the limits of this collection.
+ *
+ *  @param range A range within this collection's enumeration
+ */
+- (AHGCollection *)sliceWithRange:(NSRange)range;
+
 /** 
  *  Reduce a collection to a single value using an optional start value.
  *
@@ -107,6 +123,8 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  @return The result of the reduction.
  */
 - (id)reduce:(id)startValue withOperator:(AHGFoldBlock)block;
+
+/** @name Grouping and Sorting */
 
 /** 
  *  Group objects in this collection using a function that maps each object to a key.

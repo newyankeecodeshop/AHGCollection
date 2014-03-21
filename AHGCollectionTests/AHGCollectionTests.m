@@ -136,6 +136,23 @@
     XCTAssertEqualObjects(resultNot, testNot, @"FilterNot function didn't work");
 }
 
+- (void)testSliceAndDice
+{
+    NSMutableArray *numbers = [NSMutableArray array];
+    
+    for (int i = 0; i < 1000; ++i) {
+        [numbers addObject:[NSNumber numberWithInt:i]];
+    }
+    
+    AHGCollection *coll = AHGNewColl(numbers);
+
+    NSNumber *value = [[coll slice:50 until:51] reduce:@0 withOperator:^id(id resultObject, id anObject) {
+        return [NSNumber numberWithInt:[resultObject intValue] + [anObject intValue]];
+    }];
+    
+    XCTAssertEqual(50, [value intValue], @"Couldn't slice 50");
+}
+
 - (void)testReduce
 {
     AHGCollection *strings = AHGNewColl(self.strings);
