@@ -59,11 +59,10 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
 
 /**
  *  A basic iteration through the objects in the collection.
- *  The block can break out of the loop early by setting the `stop` parameter to `YES`.
  *
  *  @param block The block to execute for each object in the collection.
  */
-- (void)forEach:(void (^)(id obj, BOOL *stop))block;
+- (void)forEach:(void (^)(id anObject))block;
 
 /** @name Transforming a Collection */
 

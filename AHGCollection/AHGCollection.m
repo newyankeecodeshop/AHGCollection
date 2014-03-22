@@ -69,16 +69,10 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     return YES;
 }
 
-- (void)forEach:(void (^)(id obj, BOOL *stop))block
+- (void)forEach:(void (^)(id anObject))block
 {
-	BOOL stop = NO;
-	
 	for (id obj in m_coll) {
-		block(obj, &stop);
-		
-		if (stop) {
-			break;
-		}
+		block(obj);
 	}
 }
 
