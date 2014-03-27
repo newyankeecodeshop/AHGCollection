@@ -189,20 +189,20 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll);
  *
  *  @param key The key used to lookup the map value.
  */
-- (AHGCollection *)mapWithKeyValue:(NSString *)key;
+- (AHGCollection *)mapWithValueForKey:(NSString *)key;
 
 /**
  *  Return a new collection containing elements that have a property value of YES or non-nil for the given key.
  *
  *  @param key The key used to lookup the filter value.
  */
-- (AHGCollection *)filterWithKeyValue:(NSString *)key;
+- (AHGCollection *)filterWithValueForKey:(NSString *)key;
 
 /**
  *  Return a dictionary whose keys are the `valueForKey:` for each element in this collection.
  *
  *  @param key The key used to lookup the grouping value.
  */
-- (NSDictionary *)groupByKeyValue:(NSString *)key;
+- (NSDictionary *)groupByValueForKey:(NSString *)key;
 
 @end

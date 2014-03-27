@@ -217,7 +217,7 @@
 
 - (void)testMapWithKeyValue
 {
-    NSArray *result = [[AHGNewColl(self.dictValues) mapWithKeyValue:@"name"] allObjects];
+    NSArray *result = [[AHGNewColl(self.dictValues) mapWithValueForKey:@"name"] allObjects];
     
     XCTAssertEqual(self.dictValues.count, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject, @"First value is wrong");
@@ -228,7 +228,7 @@
     //
     result = [[[AHGNewColl(self.dictValues) filter:^BOOL(id anObject) {
         return [anObject valueForKey:@"a"] != nil;
-    }] mapWithKeyValue:@"name"] allObjects];
+    }] mapWithValueForKey:@"name"] allObjects];
     
     XCTAssertEqual(2, result.count, @"Count is wrong after filtering");
 }
@@ -237,7 +237,7 @@
 {
 	NSUInteger targetCount = 2;
 	
-    NSArray *result = [[AHGNewColl(self.dictValues) filterWithKeyValue:@"a"] allObjects];
+    NSArray *result = [[AHGNewColl(self.dictValues) filterWithValueForKey:@"a"] allObjects];
     XCTAssertEqual(targetCount, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject[@"name"], @"First value is wrong");
     XCTAssertEqualObjects(@"Andrew3", result.lastObject[@"name"], @"Last value is wrong");
@@ -247,7 +247,7 @@
 {
 	NSUInteger count1 = 4, count2 = 2;
 	
-    NSDictionary *result = [AHGNewColl(self.dictValues) groupByKeyValue:@"name"];
+    NSDictionary *result = [AHGNewColl(self.dictValues) groupByValueForKey:@"name"];
     XCTAssertEqual(count1, result.count, @"Count is wrong");
     
     for (id key in result) {

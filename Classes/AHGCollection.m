@@ -220,7 +220,7 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 
 @implementation AHGCollection (KeyValueCoding)
 
-- (AHGCollection *)mapWithKeyValue:(NSString *)key
+- (AHGCollection *)mapWithValueForKey:(NSString *)key
 {
     // Use the built-in ability for collections such as NSArray and NSSet to create mapped collections.
     // This has the benefit of enforcing constraints within the new collection, such as an NSSet producing
@@ -232,7 +232,7 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     return [[AHGCollection alloc] initWithCollection:newColl];
 }
 
-- (AHGCollection *)filterWithKeyValue:(NSString *)key
+- (AHGCollection *)filterWithValueForKey:(NSString *)key
 {
     return [self filter:^BOOL(id obj) {
         id value = [obj valueForKey:key];
@@ -246,7 +246,7 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     }];
 }
 
-- (NSDictionary *)groupByKeyValue:(NSString *)key
+- (NSDictionary *)groupByValueForKey:(NSString *)key
 {
     return [self groupBy:^id(id obj) {
         id value = [obj valueForKey:key];
