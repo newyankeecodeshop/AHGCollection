@@ -16,8 +16,20 @@
 		2D004F57187226B600704E68 /* libAHGCollection.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D004F3F187226B600704E68 /* libAHGCollection.a */; };
 		2D004F5D187226B600704E68 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2D004F5B187226B600704E68 /* InfoPlist.strings */; };
 		2D004F5F187226B600704E68 /* AHGCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D004F5E187226B600704E68 /* AHGCollectionTests.m */; };
+		491CB92B18E3466500A85AD5 /* AHGEnumeration.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 499D842E18B552BA00C4C7BC /* AHGEnumeration.h */; };
+		491CB93218E4621800A85AD5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 491CB93118E4621800A85AD5 /* Cocoa.framework */; };
+		491CB94218E4621900A85AD5 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D004F50187226B600704E68 /* XCTest.framework */; };
+		491CB94318E4621900A85AD5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 491CB93118E4621800A85AD5 /* Cocoa.framework */; };
+		491CB94618E4621900A85AD5 /* libAHGCollectionMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 491CB93018E4621800A85AD5 /* libAHGCollectionMac.a */; };
+		491CB95518E4624300A85AD5 /* AHGCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D004F49187226B600704E68 /* AHGCollection.m */; };
+		491CB95618E4624A00A85AD5 /* AHGEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 499D842F18B552BA00C4C7BC /* AHGEnumeration.m */; };
+		491CB95718E4625500A85AD5 /* AHGEnumerationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 499E16B118B6486C00DCB552 /* AHGEnumerationTests.m */; };
+		491CB95818E4625800A85AD5 /* AHGCollectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D004F5E187226B600704E68 /* AHGCollectionTests.m */; };
+		491CB95918E462A100A85AD5 /* Test Data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 499E16B318B64ABD00DCB552 /* Test Data.plist */; };
+		491CB95A18E4631700A85AD5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2D004F5B187226B600704E68 /* InfoPlist.strings */; };
+		491CB95B18E463A800A85AD5 /* AHGCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D004F47187226B600704E68 /* AHGCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		491CB95C18E463A800A85AD5 /* AHGEnumeration.h in Headers */ = {isa = PBXBuildFile; fileRef = 499D842E18B552BA00C4C7BC /* AHGEnumeration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		499D843018B552BA00C4C7BC /* AHGEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 499D842F18B552BA00C4C7BC /* AHGEnumeration.m */; };
-		499D843118B552BA00C4C7BC /* AHGEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 499D842F18B552BA00C4C7BC /* AHGEnumeration.m */; };
 		499E16B218B6486C00DCB552 /* AHGEnumerationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 499E16B118B6486C00DCB552 /* AHGEnumerationTests.m */; };
 		499E16B418B64ABD00DCB552 /* Test Data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 499E16B318B64ABD00DCB552 /* Test Data.plist */; };
 /* End PBXBuildFile section */
@@ -30,6 +42,13 @@
 			remoteGlobalIDString = 2D004F3E187226B600704E68;
 			remoteInfo = AHGCollection;
 		};
+		491CB94418E4621900A85AD5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D004F37187226B600704E68 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 491CB92F18E4621100A85AD5;
+			remoteInfo = AHGCollectionMac;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +58,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				491CB92B18E3466500A85AD5 /* AHGEnumeration.h in CopyFiles */,
 				2D004F48187226B600704E68 /* AHGCollection.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,7 +68,7 @@
 /* Begin PBXFileReference section */
 		2D004F3F187226B600704E68 /* libAHGCollection.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAHGCollection.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D004F42187226B600704E68 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		2D004F46187226B600704E68 /* AHGCollection-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AHGCollection-Prefix.pch"; sourceTree = "<group>"; };
+		2D004F46187226B600704E68 /* AHGCollection-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AHGCollection-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		2D004F47187226B600704E68 /* AHGCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AHGCollection.h; sourceTree = "<group>"; };
 		2D004F49187226B600704E68 /* AHGCollection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHGCollection.m; sourceTree = "<group>"; };
 		2D004F4F187226B600704E68 /* AHGCollectionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AHGCollectionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +77,12 @@
 		2D004F5A187226B600704E68 /* AHGCollectionTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AHGCollectionTests-Info.plist"; sourceTree = "<group>"; };
 		2D004F5C187226B600704E68 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2D004F5E187226B600704E68 /* AHGCollectionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AHGCollectionTests.m; sourceTree = "<group>"; };
+		491CB93018E4621800A85AD5 /* libAHGCollectionMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAHGCollectionMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		491CB93118E4621800A85AD5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		491CB93418E4621800A85AD5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		491CB93518E4621800A85AD5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		491CB93618E4621800A85AD5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		491CB94118E4621900A85AD5 /* AHGCollectionMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AHGCollectionMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		499D842E18B552BA00C4C7BC /* AHGEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AHGEnumeration.h; sourceTree = "<group>"; };
 		499D842F18B552BA00C4C7BC /* AHGEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHGEnumeration.m; sourceTree = "<group>"; };
 		499E16B118B6486C00DCB552 /* AHGEnumerationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AHGEnumerationTests.m; sourceTree = "<group>"; };
@@ -83,14 +109,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		491CB92D18E4621100A85AD5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				491CB93218E4621800A85AD5 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		491CB93E18E4621900A85AD5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				491CB94318E4621900A85AD5 /* Cocoa.framework in Frameworks */,
+				491CB94218E4621900A85AD5 /* XCTest.framework in Frameworks */,
+				491CB94618E4621900A85AD5 /* libAHGCollectionMac.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2D004F36187226B600704E68 = {
 			isa = PBXGroup;
 			children = (
-				2D004F44187226B600704E68 /* AHGCollection */,
-				2D004F58187226B600704E68 /* AHGCollectionTests */,
+				2D004F44187226B600704E68 /* Classes */,
+				2D004F58187226B600704E68 /* Tests */,
 				2D004F41187226B600704E68 /* Frameworks */,
 				2D004F40187226B600704E68 /* Products */,
 			);
@@ -101,6 +145,8 @@
 			children = (
 				2D004F3F187226B600704E68 /* libAHGCollection.a */,
 				2D004F4F187226B600704E68 /* AHGCollectionTests.xctest */,
+				491CB93018E4621800A85AD5 /* libAHGCollectionMac.a */,
+				491CB94118E4621900A85AD5 /* AHGCollectionMacTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -111,11 +157,13 @@
 				2D004F42187226B600704E68 /* Foundation.framework */,
 				2D004F50187226B600704E68 /* XCTest.framework */,
 				2D004F53187226B600704E68 /* UIKit.framework */,
+				491CB93118E4621800A85AD5 /* Cocoa.framework */,
+				491CB93318E4621800A85AD5 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2D004F44187226B600704E68 /* AHGCollection */ = {
+		2D004F44187226B600704E68 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				2D004F47187226B600704E68 /* AHGCollection.h */,
@@ -124,7 +172,7 @@
 				499D842F18B552BA00C4C7BC /* AHGEnumeration.m */,
 				2D004F45187226B600704E68 /* Supporting Files */,
 			);
-			path = AHGCollection;
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		2D004F45187226B600704E68 /* Supporting Files */ = {
@@ -135,14 +183,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2D004F58187226B600704E68 /* AHGCollectionTests */ = {
+		2D004F58187226B600704E68 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				2D004F5E187226B600704E68 /* AHGCollectionTests.m */,
 				499E16B118B6486C00DCB552 /* AHGEnumerationTests.m */,
 				2D004F59187226B600704E68 /* Supporting Files */,
 			);
-			path = AHGCollectionTests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		2D004F59187226B600704E68 /* Supporting Files */ = {
@@ -155,7 +203,29 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		491CB93318E4621800A85AD5 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				491CB93418E4621800A85AD5 /* Foundation.framework */,
+				491CB93518E4621800A85AD5 /* CoreData.framework */,
+				491CB93618E4621800A85AD5 /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		491CB92E18E4621100A85AD5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				491CB95B18E463A800A85AD5 /* AHGCollection.h in Headers */,
+				491CB95C18E463A800A85AD5 /* AHGEnumeration.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		2D004F3E187226B600704E68 /* AHGCollection */ = {
@@ -193,6 +263,41 @@
 			productReference = 2D004F4F187226B600704E68 /* AHGCollectionTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		491CB92F18E4621100A85AD5 /* AHGCollectionMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 491CB95318E4621900A85AD5 /* Build configuration list for PBXNativeTarget "AHGCollectionMac" */;
+			buildPhases = (
+				491CB92C18E4621100A85AD5 /* Sources */,
+				491CB92D18E4621100A85AD5 /* Frameworks */,
+				491CB92E18E4621100A85AD5 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AHGCollectionMac;
+			productName = AHGCollectionMac;
+			productReference = 491CB93018E4621800A85AD5 /* libAHGCollectionMac.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		491CB94018E4621900A85AD5 /* AHGCollectionMacTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 491CB95418E4621900A85AD5 /* Build configuration list for PBXNativeTarget "AHGCollectionMacTests" */;
+			buildPhases = (
+				491CB93D18E4621900A85AD5 /* Sources */,
+				491CB93E18E4621900A85AD5 /* Frameworks */,
+				491CB93F18E4621900A85AD5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				491CB94518E4621900A85AD5 /* PBXTargetDependency */,
+			);
+			name = AHGCollectionMacTests;
+			productName = AHGCollectionMacTests;
+			productReference = 491CB94118E4621900A85AD5 /* AHGCollectionMacTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -216,6 +321,8 @@
 			targets = (
 				2D004F3E187226B600704E68 /* AHGCollection */,
 				2D004F4E187226B600704E68 /* AHGCollectionTests */,
+				491CB92F18E4621100A85AD5 /* AHGCollectionMac */,
+				491CB94018E4621900A85AD5 /* AHGCollectionMacTests */,
 			);
 		};
 /* End PBXProject section */
@@ -227,6 +334,15 @@
 			files = (
 				2D004F5D187226B600704E68 /* InfoPlist.strings in Resources */,
 				499E16B418B64ABD00DCB552 /* Test Data.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		491CB93F18E4621900A85AD5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				491CB95A18E4631700A85AD5 /* InfoPlist.strings in Resources */,
+				491CB95918E462A100A85AD5 /* Test Data.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +364,24 @@
 			files = (
 				2D004F5F187226B600704E68 /* AHGCollectionTests.m in Sources */,
 				499E16B218B6486C00DCB552 /* AHGEnumerationTests.m in Sources */,
-				499D843118B552BA00C4C7BC /* AHGEnumeration.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		491CB92C18E4621100A85AD5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				491CB95518E4624300A85AD5 /* AHGCollection.m in Sources */,
+				491CB95618E4624A00A85AD5 /* AHGEnumeration.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		491CB93D18E4621900A85AD5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				491CB95818E4625800A85AD5 /* AHGCollectionTests.m in Sources */,
+				491CB95718E4625500A85AD5 /* AHGEnumerationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +392,11 @@
 			isa = PBXTargetDependency;
 			target = 2D004F3E187226B600704E68 /* AHGCollection */;
 			targetProxy = 2D004F55187226B600704E68 /* PBXContainerItemProxy */;
+		};
+		491CB94518E4621900A85AD5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 491CB92F18E4621100A85AD5 /* AHGCollectionMac */;
+			targetProxy = 491CB94418E4621900A85AD5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -349,7 +487,7 @@
 			buildSettings = {
 				DSTROOT = /tmp/AHGCollection.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AHGCollection/AHGCollection-Prefix.pch";
+				GCC_PREFIX_HEADER = "AHGCollection-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -361,7 +499,7 @@
 			buildSettings = {
 				DSTROOT = /tmp/AHGCollection.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AHGCollection/AHGCollection-Prefix.pch";
+				GCC_PREFIX_HEADER = "AHGCollection-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -378,12 +516,12 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AHGCollection/AHGCollection-Prefix.pch";
+				GCC_PREFIX_HEADER = "AHGCollection-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "AHGCollectionTests/AHGCollectionTests-Info.plist";
+				INFOPLIST_FILE = "Tests/AHGCollectionTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -399,9 +537,93 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AHGCollection/AHGCollection-Prefix.pch";
-				INFOPLIST_FILE = "AHGCollectionTests/AHGCollectionTests-Info.plist";
+				GCC_PREFIX_HEADER = "AHGCollection-Prefix.pch";
+				INFOPLIST_FILE = "Tests/AHGCollectionTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		491CB94F18E4621900A85AD5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AHGCollection-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		491CB95018E4621900A85AD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AHGCollection-Prefix.pch";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		491CB95118E4621900A85AD5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AHGCollection-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Tests/AHGCollectionTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		491CB95218E4621900A85AD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AHGCollection-Prefix.pch";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Tests/AHGCollectionTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -435,6 +657,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		491CB95318E4621900A85AD5 /* Build configuration list for PBXNativeTarget "AHGCollectionMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				491CB94F18E4621900A85AD5 /* Debug */,
+				491CB95018E4621900A85AD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		491CB95418E4621900A85AD5 /* Build configuration list for PBXNativeTarget "AHGCollectionMacTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				491CB95118E4621900A85AD5 /* Debug */,
+				491CB95218E4621900A85AD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

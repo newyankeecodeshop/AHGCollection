@@ -114,8 +114,14 @@
         return [fileMgr contentsOfDirectoryAtPath:[rootPath stringByAppendingPathComponent:path] error:&myErr];
     }];
     
+    // Different tests because bundle formats are different between OSX and iOS
+#if TARGET_OS_IPHONE
 	NSUInteger numFiles = 1;
     XCTAssertEqual(numFiles, [files.allObjects count], @"Should have found InfoPlist.strings");
+#else
+	NSUInteger numFiles = 3;
+    XCTAssertEqual(numFiles, [files.allObjects count], @"Should have found Info.plist, MacOS, Resources");
+#endif
 }
 
 - (void)testFilter
