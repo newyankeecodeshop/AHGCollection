@@ -230,7 +230,7 @@
         return [anObject valueForKey:@"a"] != nil;
     }] mapWithValueForKey:@"name"] allObjects];
     
-    XCTAssertEqual(2, result.count, @"Count is wrong after filtering");
+    XCTAssertEqual(2U, result.count, @"Count is wrong after filtering");
 }
 
 - (void)testFilterWithKeyValue

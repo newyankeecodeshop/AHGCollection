@@ -159,7 +159,7 @@ static id (^ txStrFunc)(id) = ^(NSString *anObject) {
         [results addObject:obj];
     }
     
-    XCTAssertEqual(3, [results count], @"Didn't get the last three items");
+    XCTAssertEqual(3U, [results count], @"Didn't get the last three items");
 }
 
 @end
