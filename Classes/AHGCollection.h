@@ -171,6 +171,13 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 - (NSSet *)setOfObjects;
 
+/**
+ * Returns the first object (if any) in the collection.
+ *
+ *  @return The first object
+ */
+- (id)firstObject;
+
 @end
 
 /*

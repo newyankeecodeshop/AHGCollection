@@ -214,6 +214,15 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     return [set copy];
 }
 
+- (id)firstObject
+{
+    for (id obj in m_coll) {
+        return obj;
+    }
+    
+    return nil;
+}
+
 @end
 
 #pragma mark
