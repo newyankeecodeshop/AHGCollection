@@ -24,9 +24,7 @@
 
 #import <Foundation/Foundation.h>
 
-// Foundation collections implement these two protocols
-typedef NSObject<NSCopying, NSFastEnumeration> AHGCoreCollection;
-
+/* Signatures for the various blocks used in this protocol */
 typedef id (^AHGTransformBlock)(id anObject);
 typedef id (^AHGFoldBlock)(id resultObject, id anObject);
 typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
@@ -35,7 +33,8 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
 /**
  *  A class which provides functional programming operations on various Foundation collection classes.
  */
-@interface AHGCollection : NSObject <NSCopying, NSFastEnumeration>
+@protocol AHGCollection <NSFastEnumeration>
+@optional
 
 /** @name Properties */
 
@@ -43,17 +42,6 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  Test if the underlying collection has at least one element
  */
 @property (readonly, nonatomic, getter=isEmpty) BOOL empty;
-
-/** @name Initializing a Collection */
-
-/**
- *  Initializes an `AHGCollection` instance with a backing collection. If the collection is mutable, the `copy` method
- *  will be invoked so that an immutable collection is referenced by this object.
- *
- *  @param collection An enumerable object, typically a Foundation collection.
- *  @return A new collection object
- */
-- (id)initWithCollection:(AHGCoreCollection *)collection;
 
 /** @name Basic Iteration */
 
@@ -64,6 +52,13 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 - (void)forEach:(void (^)(id anObject))block;
 
+/**
+ * Returns the first object (if any) in an ordered collection and returns an arbitrary value for an unordered collection (e.g. `NSSet`).
+ *
+ *  @return The first object
+ */
+- (id)firstObject;
+
 /** @name Transforming a Collection */
 
 /**
@@ -72,7 +67,7 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  @param transform A block that transforms values in the collection.
  *  @return A mapped collection.
  */
-- (AHGCollection *)map:(AHGTransformBlock)transform;
+- (id<AHGCollection>)map:(AHGTransformBlock)transform;
 
 /**
  *  Creates a new collection by collapsing a list of values for each element in this collection.
@@ -80,7 +75,7 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  @param transform A block that returns a collection for each object.
  *  @return A mapped collection.
  */
-- (AHGCollection *)flatMap:(AHGFlatMapBlock)transform;
+- (id<AHGCollection>)flatMap:(AHGFlatMapBlock)transform;
 
 /**
  *  Creates a new collection with elements that pass the predicate test.
@@ -88,7 +83,7 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  @param predicate A block that tests each object in the collection.
  *  @return A filtered collection.
  */
-- (AHGCollection *)filter:(AHGPredicateBlock)predicate;
+- (id<AHGCollection>)filter:(AHGPredicateBlock)predicate;
 
 /**
  *  Creates a new collection with elements that fail the predicate test.
@@ -96,7 +91,7 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  @param predicate A block that tests each object in the collection.
  *  @return A filtered collection.
  */
-- (AHGCollection *)filterNot:(AHGPredicateBlock)predicate;
+- (id<AHGCollection>)filterNot:(AHGPredicateBlock)predicate;
 
 /**
  *  Creates a collection containing the objects from `startIndex` up to (but not including) `endIndex`. This method does not validate that the startIndex is within the range of the collecton. If the startIndex is greater than the count of elements,
@@ -105,14 +100,14 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  @param startIndex The index of the first element to extract
  *  @param endIndex   The index at which to stop extraction
  */
-- (AHGCollection *)slice:(NSUInteger)startIndex until:(NSUInteger)endIndex;
+- (id<AHGCollection>)slice:(NSUInteger)startIndex until:(NSUInteger)endIndex;
 
 /**
  *  Creates a collection containing objects that fall within the given range. Like `slice:until`, an empty collection is returned if the range falls outside the limits of this collection.
  *
  *  @param range A range within this collection's enumeration
  */
-- (AHGCollection *)sliceWithRange:(NSRange)range;
+- (id<AHGCollection>)sliceWithRange:(NSRange)range;
 
 /** 
  *  Reduce a collection to a single value using an optional start value.
@@ -171,39 +166,21 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 - (NSSet *)setOfObjects;
 
-/**
- * Returns the first object (if any) in the collection.
- *
- *  @return The first object
- */
-- (id)firstObject;
-
-@end
-
-/*
- * Create a Collection with an existing Foundation collection.
- *
- * @param coll A collection of objects.
- */
-AHGCollection *AHGNewColl(AHGCoreCollection *coll);
-
-#pragma mark
-
-@interface AHGCollection (KeyValueCoding)
+/** @name Key-Value Coding */
 
 /**
  *  Return a new collection containing the `valueForKey:` for each object in this collection.
  *
  *  @param key The key used to lookup the map value.
  */
-- (AHGCollection *)mapWithValueForKey:(NSString *)key;
+- (id<AHGCollection>)mapWithValueForKey:(NSString *)key;
 
 /**
  *  Return a new collection containing elements that have a property value of YES or non-nil for the given key.
  *
  *  @param key The key used to lookup the filter value.
  */
-- (AHGCollection *)filterWithValueForKey:(NSString *)key;
+- (id<AHGCollection>)filterWithValueForKey:(NSString *)key;
 
 /**
  *  Return a dictionary whose keys are the `valueForKey:` for each element in this collection.
@@ -211,5 +188,30 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll);
  *  @param key The key used to lookup the grouping value.
  */
 - (NSDictionary *)groupByValueForKey:(NSString *)key;
+
+@end
+
+#pragma mark - Concrete implementation
+
+@interface AHGCollection : NSObject <AHGCollection>
+
+/**
+ * Provides a mechanism to mixin the implementation of `AHGCollection` to other classes that implement NSFastEnumeration.
+ */
++ (void)mixinMethodsToClass:(Class)clazz;
+
+@end
+
+#pragma mark - Mixin to Foundation collections
+
+@interface NSArray (AHGCollection) <AHGCollection>
+
+@end
+
+@interface NSSet (AHGCollection) <AHGCollection>
+
+@end
+
+@interface NSOrderedSet (AHGCollection) <AHGCollection>
 
 @end

@@ -22,7 +22,7 @@
  THE SOFTWARE.
 */
 
-#import <Foundation/Foundation.h>
+#import "AHGCollection.h"
 
 typedef id (^AHGTransformBlock)(id anObject);
 typedef BOOL (^AHGPredicateBlock)(id anObject);
@@ -32,7 +32,7 @@ typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
  * A base class for implementing an `NSFastEnumeration` in terms of a source collection. This class provides
  * an internal buffer for temporary objects created during the enumeration process. It is used when
  */
-@interface AHGFastEnumeration : NSObject<NSFastEnumeration, NSCopying>
+@interface AHGFastEnumeration : NSObject<AHGCollection, NSCopying>
 
 /** @name Initializing the Enumeration */
 

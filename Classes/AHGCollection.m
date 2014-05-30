@@ -24,45 +24,44 @@
 
 #import "AHGCollection.h"
 #import "AHGEnumeration.h"
-
-AHGCollection *AHGNewColl(AHGCoreCollection *coll)
-{
-    return [[AHGCollection alloc] initWithCollection:coll];
-}
-
-#pragma mark
+#import <objc/runtime.h>
 
 @implementation AHGCollection
 {
-    NSObject<NSFastEnumeration> *m_coll;
 }
 
-- (id)initWithCollection:(AHGCoreCollection *)collection
++ (void)mixinMethodsToClass:(Class)clazz
 {
-    if ((self = [super init])) {
-        m_coll = [collection copy];
+    NSParameterAssert([clazz conformsToProtocol:@protocol(NSFastEnumeration)]);
+    
+    unsigned int methodCount;
+    Method *methods = class_copyMethodList([AHGCollection class], &methodCount);
+    
+    for (int i = 0; i < methodCount; i++) {
+        SEL name = method_getName(methods[i]);
+        
+        // Don't overwrite the class's own implementation of the method (esp. for NSFastEnumeration)
+        if (class_getInstanceMethod(clazz, name)) {
+            continue;
+        }
+        class_addMethod(clazz, name, method_getImplementation(methods[i]), method_getTypeEncoding(methods[i]));
     }
     
-    return self;
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    return self;
+    free(methods);
 }
 
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
                                   objects:(id __unsafe_unretained [])buffer
                                     count:(NSUInteger)len
 {
-    return [m_coll countByEnumeratingWithState:state objects:buffer count:len];
+    return 0;   // Not important - will be implemented by the real class at runtime
 }
 
 - (BOOL)isEmpty
 {
     id obj;
     
-    for (obj in m_coll) {
+    for (obj in self) {
         return NO;
     }
     
@@ -71,62 +70,61 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 
 - (void)forEach:(void (^)(id anObject))block
 {
-	for (id obj in m_coll) {
+	for (id obj in self) {
 		block(obj);
 	}
 }
 
+- (id)firstObject
+{
+    for (id obj in self) {
+        return obj;
+    }
+    
+    return nil;
+}
+
 #pragma mark Transforming a Collection
 
-- (AHGCollection *)map:(AHGTransformBlock)transform
+- (id<AHGCollection>)map:(AHGTransformBlock)transform
 {
 	// This enumeration object wraps the source collection with a transform function
-	AHGTransformEnumeration *transformer = [[AHGTransformEnumeration alloc] initWithSource:m_coll
-																			   transform:transform];
-	return [[AHGCollection alloc] initWithCollection:transformer];
+	return [[AHGTransformEnumeration alloc] initWithSource:self	transform:transform];
 }
 
-- (AHGCollection *)flatMap:(AHGFlatMapBlock)transform
+- (id<AHGCollection>)flatMap:(AHGFlatMapBlock)transform
 {
-	AHGFlatMapEnumeration *flatMapper = [[AHGFlatMapEnumeration alloc] initWithSource:m_coll
-																		  transform:transform];
-	return [[AHGCollection alloc] initWithCollection:flatMapper];
+	return [[AHGFlatMapEnumeration alloc] initWithSource:self transform:transform];
 }
 
-- (AHGCollection *)filter:(AHGPredicateBlock)predicate
+- (id<AHGCollection>)filter:(AHGPredicateBlock)predicate
 {
-	AHGFilterEnumeration *filter = [[AHGFilterEnumeration alloc] initWithSource:m_coll
-																	   filter:predicate];
-	return [[AHGCollection alloc] initWithCollection:filter];
+	return [[AHGFilterEnumeration alloc] initWithSource:self filter:predicate];
 }
 
-- (AHGCollection *)filterNot:(AHGPredicateBlock)predicate
+- (id<AHGCollection>)filterNot:(AHGPredicateBlock)predicate
 {
     return [self filter:^BOOL(id obj) {
         return !predicate(obj);
     }];
 }
 
-- (AHGCollection *)slice:(NSUInteger)startIndex until:(NSUInteger)endIndex
+- (id<AHGCollection>)slice:(NSUInteger)startIndex until:(NSUInteger)endIndex
 {
     NSRange range = NSMakeRange(startIndex, endIndex - startIndex);
-	AHGRangeEnumeration *rangeEnum = [[AHGRangeEnumeration alloc] initWithSource:m_coll range:range];
-    
-	return [[AHGCollection alloc] initWithCollection:rangeEnum];
+	return [[AHGRangeEnumeration alloc] initWithSource:self range:range];
 }
 
-- (AHGCollection *)sliceWithRange:(NSRange)range
+- (id<AHGCollection>)sliceWithRange:(NSRange)range
 {
-	AHGRangeEnumeration *rangeEnum = [[AHGRangeEnumeration alloc] initWithSource:m_coll range:range];
-    
-	return [[AHGCollection alloc] initWithCollection:rangeEnum];    
+	return [[AHGRangeEnumeration alloc] initWithSource:self range:range];
 }
 
 - (id)reduce:(id)startValue withOperator:(AHGFoldBlock)folder
 {
     id result = startValue;
     
-    for (id obj in m_coll) {
+    for (id obj in self) {
         result = folder(result, obj);
     }
     
@@ -139,7 +137,7 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 {
     NSMutableDictionary *newDict = [NSMutableDictionary dictionary];
     
-    for (id obj in m_coll) {
+    for (id obj in self) {
         id key = transform(obj);
         NSMutableArray *group = [newDict objectForKey:key];
         
@@ -154,9 +152,11 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     return [newDict copy];
 }
 
+#pragma mark Testing objects in a Collection
+
 - (id)find:(AHGPredicateBlock)predicate
 {
-    for (id obj in m_coll) {
+    for (id obj in self) {
         if (predicate(obj)) {
             return obj;
         }
@@ -167,7 +167,7 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 
 - (BOOL)exists:(AHGPredicateBlock)predicate
 {
-    for (id obj in m_coll) {
+    for (id obj in self) {
         if (predicate(obj)) {
             return YES;
         }
@@ -178,7 +178,7 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 
 - (BOOL)every:(AHGPredicateBlock)predicate
 {
-    for (id obj in m_coll) {
+    for (id obj in self) {
         if (!predicate(obj)) {
             return NO;
         }
@@ -187,16 +187,13 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
     return YES;
 }
 
+#pragma mark Converting a Collection
+
 - (NSArray *)allObjects
 {
-	// If the backing collection is already an array, we can return it.
-	if ([m_coll isKindOfClass:[NSArray class]]) {
-		return (NSArray *)m_coll;
-	}
-	
 	NSMutableArray *array = [NSMutableArray array];
 	
-	for (id obj in m_coll) {
+	for (id obj in self) {
 		[array addObject:obj];
 	}
 	
@@ -207,20 +204,11 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 {
     NSMutableSet *set = [NSMutableSet set];
     
-    for (id obj in m_coll) {
+    for (id obj in self) {
         [set addObject:obj];
     }
     
     return [set copy];
-}
-
-- (id)firstObject
-{
-    for (id obj in m_coll) {
-        return obj;
-    }
-    
-    return nil;
 }
 
 @end
@@ -229,19 +217,19 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 
 @implementation AHGCollection (KeyValueCoding)
 
-- (AHGCollection *)mapWithValueForKey:(NSString *)key
+- (id<AHGCollection>)mapWithValueForKey:(NSString *)key
 {
     // Use the built-in ability for collections such as NSArray and NSSet to create mapped collections.
     // This has the benefit of enforcing constraints within the new collection, such as an NSSet producing
     // a mapped collection with no duplicates. TODO: Fix when m_coll is an NSDictionary.
     //
-    AHGCoreCollection *newColl = [m_coll valueForKey:key];
+    NSObject<AHGCollection> *newColl = [self valueForKey:key];
     NSAssert([newColl conformsToProtocol:@protocol(NSFastEnumeration)], @"Collection needs to implement valueForKey:");
     
-    return [[AHGCollection alloc] initWithCollection:newColl];
+    return newColl;
 }
 
-- (AHGCollection *)filterWithValueForKey:(NSString *)key
+- (id<AHGCollection>)filterWithValueForKey:(NSString *)key
 {
     return [self filter:^BOOL(id obj) {
         id value = [obj valueForKey:key];
@@ -266,3 +254,41 @@ AHGCollection *AHGNewColl(AHGCoreCollection *coll)
 
 @end
 
+#pragma mark
+
+@implementation NSArray (AHGCollection)
+
++ (void)load
+{
+    [AHGCollection mixinMethodsToClass:self];
+}
+
+- (NSArray *)allObjects
+{
+    return self;
+}
+
+@end
+
+@implementation NSSet (AHGCollection)
+
++ (void)load
+{
+    [AHGCollection mixinMethodsToClass:self];
+}
+
+- (NSSet *)setOfObjects
+{
+    return self;
+}
+
+@end
+
+@implementation NSOrderedSet (AHGCollection)
+
++ (void)load
+{
+    [AHGCollection mixinMethodsToClass:self];
+}
+
+@end

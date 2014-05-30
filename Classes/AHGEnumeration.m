@@ -57,6 +57,11 @@
 	id<NSFastEnumeration>  m_source;
 }
 
++ (void)load
+{
+    [AHGCollection mixinMethodsToClass:self];
+}
+
 - (instancetype)initWithSource:(id<NSFastEnumeration>)source
 {
 	if ((self = [super init])) {

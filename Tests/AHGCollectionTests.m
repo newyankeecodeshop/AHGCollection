@@ -45,7 +45,7 @@
 
 - (void)testForEach
 {
-    AHGCollection *coll = AHGNewColl(self.strings);
+    id<AHGCollection> coll = self.strings;
 
     for (NSString *str in coll) {
         XCTAssertTrue([self.strings containsObject:str], @"Enumeration not working");
@@ -56,7 +56,7 @@
 
 - (void)testMap
 {
-    NSArray *result = [[[AHGNewColl(self.strings) map:^id(NSString *str) {
+    NSArray *result = [[[self.strings map:^id(NSString *str) {
         return [str uppercaseString];
     }] map:^id(NSString *str) {
         return [str stringByAppendingString:@"!"];
@@ -69,7 +69,7 @@
     
     NSSet *stringSet = [NSSet setWithArray:self.strings];
     
-    NSArray *result2 = [[[AHGNewColl(stringSet) map:^id(NSString *str) {
+    NSArray *result2 = [[[stringSet map:^id(NSString *str) {
         return [str uppercaseString];
     }] map:^id(NSString *str) {
         return [str stringByAppendingString:@"!"];
@@ -95,7 +95,7 @@
 	NSString *rootPath = [mainBundle bundlePath];
 	
     NSArray *paths = @[rootPath];
-    AHGCollection *files = [AHGNewColl(paths) flatMap:^NSObject<NSCopying,NSFastEnumeration> *(id obj) {
+    id<AHGCollection> files = [paths flatMap:^NSObject<NSCopying,NSFastEnumeration> *(id obj) {
         return [fileMgr contentsOfDirectoryAtPath:obj error:&myErr];
     }];
     
@@ -106,7 +106,7 @@
         XCTAssertTrue([fileMgr fileExistsAtPath:path], @"Flat map didn't work!");
     }
 
-    files = [[AHGNewColl(paths) flatMap:^NSObject<NSCopying,NSFastEnumeration> *(NSString *path) {
+    files = [[paths flatMap:^NSObject<NSCopying,NSFastEnumeration> *(NSString *path) {
         NSLog(@"%@", path);
         return [fileMgr contentsOfDirectoryAtPath:path error:&myErr];
     }] flatMap:^NSObject<NSCopying,NSFastEnumeration> *(NSString *path) {
@@ -130,7 +130,7 @@
         return (BOOL) (str.length > 3);
     };
     
-    AHGCollection *strings = AHGNewColl(@[@"hello", @"to", @"you", @"again"]);
+    id<AHGCollection> strings = @[@"hello", @"to", @"you", @"again"];
     NSArray *result = [[strings filter:myFilter] allObjects];
     
     NSArray *test = @[@"hello", @"again"];
@@ -150,7 +150,7 @@
         [numbers addObject:[NSNumber numberWithInt:i]];
     }
     
-    AHGCollection *coll = AHGNewColl(numbers);
+    id<AHGCollection> coll = numbers;
 
     NSNumber *value = [[coll slice:50 until:51] reduce:@0 withOperator:^id(id resultObject, id anObject) {
         return [NSNumber numberWithInt:[resultObject intValue] + [anObject intValue]];
@@ -161,14 +161,14 @@
 
 - (void)testReduce
 {
-    AHGCollection *strings = AHGNewColl(self.strings);
+    id<AHGCollection> strings = self.strings;
     
     NSString *result = [strings reduce:@"" withOperator:^id(NSString *resultObject, NSString *anObject) {
         return [resultObject stringByAppendingString:anObject];
     }];
     XCTAssertEqualObjects(@"helloworldtoo", result, @"Fold produced the wrong result");
     
-    strings = AHGNewColl(@[]);
+    strings = @[];
     result = [strings reduce:@"empty" withOperator:^id(id resultObject, id anObject) {
         return [resultObject stringByAppendingString:anObject];
     }];
@@ -177,7 +177,7 @@
 
 - (void)testGroupBy
 {
-    AHGCollection *strings = AHGNewColl(self.stringSet);
+    id<AHGCollection> strings = self.stringSet;
     
     NSDictionary *groups = [[strings flatMap:^NSObject<NSCopying,NSFastEnumeration> *(NSString *obj) {
         return [NSArray arrayWithObjects:obj, [obj uppercaseString], [obj lowercaseString], nil];
@@ -189,7 +189,7 @@
 //        NSLog(@"Group: %@", [groups objectForKey:key]);
 
         NSArray *group = [groups objectForKey:key];
-        XCTAssertTrue([AHGNewColl(group) every:^BOOL(id obj) {
+        XCTAssertTrue([group every:^BOOL(id obj) {
             return [obj length] == [key integerValue];
         }], @"Grouping is not working");
     }
@@ -197,7 +197,7 @@
 
 - (void)testFind
 {
-    AHGCollection *strings = AHGNewColl(self.stringSet);
+    id<AHGCollection> strings = self.stringSet;
     
     NSString *result = [strings find:^(id obj) {
         return [obj hasPrefix:@"yo"];
@@ -217,7 +217,7 @@
 
 - (void)testMapWithKeyValue
 {
-    NSArray *result = [[AHGNewColl(self.dictValues) mapWithValueForKey:@"name"] allObjects];
+    NSArray *result = [[self.dictValues mapWithValueForKey:@"name"] allObjects];
     
     XCTAssertEqual(self.dictValues.count, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject, @"First value is wrong");
@@ -226,7 +226,7 @@
     // Test that mapping works correctly when the collection has had prior operations invoked.
     // This tests that the AHGFastEnumeration implementation of valueForKey: is doing the right thing.
     //
-    result = [[[AHGNewColl(self.dictValues) filter:^BOOL(id anObject) {
+    result = [[[self.dictValues filter:^BOOL(id anObject) {
         return [anObject valueForKey:@"a"] != nil;
     }] mapWithValueForKey:@"name"] allObjects];
     
@@ -237,7 +237,7 @@
 {
 	NSUInteger targetCount = 2;
 	
-    NSArray *result = [[AHGNewColl(self.dictValues) filterWithValueForKey:@"a"] allObjects];
+    NSArray *result = [[self.dictValues filterWithValueForKey:@"a"] allObjects];
     XCTAssertEqual(targetCount, result.count, @"Count is wrong");
     XCTAssertEqualObjects(@"Andrew1", result.firstObject[@"name"], @"First value is wrong");
     XCTAssertEqualObjects(@"Andrew3", result.lastObject[@"name"], @"Last value is wrong");
@@ -247,7 +247,7 @@
 {
 	NSUInteger count1 = 4, count2 = 2;
 	
-    NSDictionary *result = [AHGNewColl(self.dictValues) groupByValueForKey:@"name"];
+    NSDictionary *result = [self.dictValues groupByValueForKey:@"name"];
     XCTAssertEqual(count1, result.count, @"Count is wrong");
     
     for (id key in result) {
