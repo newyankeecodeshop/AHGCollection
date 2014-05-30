@@ -166,6 +166,14 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 - (NSSet *)setOfObjects;
 
+/**
+ *  Returns a string composed of all values in this collection, with an optional separator.
+ *
+ *  @return A string composed of all values. If the collection is empty, the string is the empty string.
+ */
+- (NSString *)stringJoinedBy:(NSString *)separator;
+
+
 /** @name Key-Value Coding */
 
 /**

@@ -211,6 +211,23 @@
     return [set copy];
 }
 
+- (NSString *)stringJoinedBy:(NSString *)separator
+{
+    NSMutableString *result = [NSMutableString string];
+    BOOL appendSeparator = NO;  // Never the first time in the loop
+    
+    for (id obj in self) {
+        if (appendSeparator) {
+            [result appendString:separator];
+        }
+
+        [result appendString:[obj description]];
+        appendSeparator = (separator != nil);
+    }
+    
+    return [result copy];
+}
+
 @end
 
 #pragma mark

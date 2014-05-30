@@ -52,6 +52,7 @@
     }
     
     XCTAssertFalse(coll.isEmpty, @"isEmpty doesn't work");
+    XCTAssertEqualObjects([self.strings componentsJoinedByString:@" - "], [coll stringJoinedBy:@" - "], @"String join is broken");
 }
 
 - (void)testMap
