@@ -30,6 +30,8 @@ typedef id (^AHGFoldBlock)(id resultObject, id anObject);
 typedef id<NSFastEnumeration> (^AHGFlatMapBlock)(id anObject);
 typedef BOOL (^AHGPredicateBlock)(id anObject);
 
+@class AHGTuple;
+
 /**
  *  A class which provides functional programming operations on various Foundation collection classes.
  */
@@ -128,6 +130,14 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  */
 - (NSDictionary *)groupBy:(AHGTransformBlock)transform;
 
+/**
+ *  Split the collection into two collections, one with elements that satisfy the predicate,
+ *  the other with elements that do not.
+ *
+ *  @param predicate A block that tests objects in the collection.
+ */
+- (AHGTuple *)partition:(AHGPredicateBlock)predicate;
+
 /** @name Testing objects in a Collection */
 
 /**
@@ -196,6 +206,17 @@ typedef BOOL (^AHGPredicateBlock)(id anObject);
  *  @param key The key used to lookup the grouping value.
  */
 - (NSDictionary *)groupByValueForKey:(NSString *)key;
+
+@end
+
+#pragma mark - Tuple
+
+@interface AHGTuple : NSObject
+
+@property (readonly, nonatomic) id first;
+@property (readonly, nonatomic) id second;
+
+- (instancetype)initWithFirst:(id)first second:(id)second;
 
 @end
 

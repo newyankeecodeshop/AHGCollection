@@ -152,6 +152,12 @@
     return [newDict copy];
 }
 
+- (AHGTuple *)partition:(AHGPredicateBlock)predicate
+{
+    return [[AHGTuple alloc] initWithFirst:[self filter:predicate]
+                                    second:[self filterNot:predicate]];
+}
+
 #pragma mark Testing objects in a Collection
 
 - (id)find:(AHGPredicateBlock)predicate
@@ -306,6 +312,21 @@
 + (void)load
 {
     [AHGCollection mixinMethodsToClass:self];
+}
+
+@end
+
+#pragma mark
+
+@implementation AHGTuple
+
+- (instancetype)initWithFirst:(id)first second:(id)second
+{
+    if ((self = [super init])) {
+        _first = first;
+        _second = second;
+    }
+    return self;
 }
 
 @end
